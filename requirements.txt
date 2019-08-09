@@ -1,3 +1,5 @@
+opencv-python
+imutils
 Click==7.0
 itsdangerous==1.1.0
 Jinja2==2.10.1

@@ -15,8 +15,8 @@ labels = None
 
 DECIMALS = 2  # The number of decimal places data is returned to
 
-MODEL = "/Users/tglenn/src/python/coral-pi-rest-server/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
-LABEL_FILE = "/Users/tglenn/src/python/coral-pi-rest-server/models/coco_labels.txt"
+MODEL = "/data/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
+LABEL_FILE = "/data/models/coco_labels.txt"
 
 
 # Function to read labels from text files.

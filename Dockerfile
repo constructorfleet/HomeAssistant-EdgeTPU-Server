@@ -54,4 +54,4 @@ ENV MODEL=/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
 
 EXPOSE 5000
 
-CMD  exec python coral-app.py --model  "${MODEL}" --labels "${LABELS}"
+CMD [ "python", "coral-app.py", "--model", "\"${MODEL}\"", "--labels", "\"${LABELS}\"" ]

@@ -1,6 +1,5 @@
 certifi==2019.6.16
 chardet==3.0.4
-edgetpu==1.9.2
 idna==2.8
 imutils==0.5.3
 numpy==1.17.1

@@ -50,8 +50,10 @@ RUN  pip install --no-cache-dir -r requirements.txt
 COPY coral-app.py     ./
 
 ENV MODEL=/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
-    LABELS=/models/coco_labels.txt
+    LABELS=/models/coco_labels.txt \
+    TOKEN="" \
+    STREAMS=""
 
 EXPOSE 5000
 
-CMD [ "python", "coral-app.py", "--model", "\"${MODEL}\"", "--labels", "\"${LABELS}\"" ]
+CMD [ "python", "coral-app.py", "-m", "\"${MODEL}\"", "-l", "\"${LABELS}\"", "-h", "https://automation.prettybaked.com:8123", "-t", "$TOKEN", "-s", "$STREAMS" ]

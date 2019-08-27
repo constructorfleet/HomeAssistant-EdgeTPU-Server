@@ -1,33 +1,30 @@
+import re
 import threading
+import logging
 import time
 
-import cv2
-import flask
-import imutils
-from PIL import Image
 from edgetpu.detection.engine import DetectionEngine
-# initialize our Flask application and the Keras model
-from flask import send_file
 
-app = flask.Flask(__name__)
-engine = None
-labels = None
+from homeassistant import HomeAssistantApi
+from video_detect import DetectionThread
 
+LOGGER = logging.getLogger(__name__)
+
+ARG_CONFIDENCE = "confidence"
+ARG_HA_URL = "home-assistant"
+ARG_LABEL_FILE = "labels"
+ARG_MODEL_FILE = "model"
+ARG_STREAMS = "streams"
+ARG_TOKEN = "token"
+ARG_TYPES = "types"
+PATTERN_STREAM_INPUT = "^(.+)\\|(.*)$"
 DECIMALS = 2  # The number of decimal places data is returned to
 
-MODEL = "/data/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite"
-LABEL_FILE = "/data/models/coco_labels.txt"
-
-
-# Function to read labels from text files.
-def read_label_file(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-        ret = {}
-        for line in lines:
-            pair = line.strip().split(maxsplit=1)
-            ret[int(pair[0])] = pair[1].strip()
-    return ret
+engine = None
+labels = None
+home_assistant = None
+threads = []
+filename = "snapshot.jpg"
 
 
 def draw_box(draw, box, img_width, img_height, text="", color=(255, 255, 0)):
@@ -48,61 +45,21 @@ def draw_box(draw, box, img_width, img_height, text="", color=(255, 255, 0)):
         draw.text((left, abs(top - 15)), text, fill=color)
 
 
-# initialize the labels dictionary
-labels = None
-model = None
-vs = None
-
-filename = "snapshot.jpg"
-
-
-def detect():
-    # loop over the frames from the video stream
-    while True:
-        # grab the frame from the threaded video stream and resize it
-        # to have a maximum width of 500 pixels
-        ret, frame = vs.read()
-        frame = imutils.resize(frame, width=500)
-        orig = frame.copy()
-
-        # prepare the frame for object detection by converting (1) it
-        # from BGR to RGB channel ordering and then (2) from a NumPy
-        # array to PIL image format
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = Image.fromarray(frame)
-
-        # make predictions on the input frame
-        start = time.time()
-        results = model.DetectWithImage(frame, threshold=args["confidence"],
-                                        keep_aspect_ratio=True, relative_coord=False)
-        end = time.time()
-
-        # loop over the results
-        for r in results:
-            # extract the bounding box and box and predicted class label
-            box = r.bounding_box.flatten().astype("int")
-            (startX, startY, endX, endY) = box
-            label = labels[r.label_id]
-
-            # draw the bounding box and label on the image
-            cv2.rectangle(orig, (startX, startY), (endX, endY),
-                          (0, 255, 0), 2)
-            y = startY - 15 if startY - 15 > 15 else startY + 15
-            text = "{}: {:.2f}%".format(label, r.score * 100)
-            cv2.putText(orig, text, (startX, y),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-        cv2.imwrite("filename", orig)
+def read_label_file(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        ret = {}
+        for line in lines:
+            pair = line.strip().split(maxsplit=1)
+            ret[int(pair[0])] = pair[1].strip()
+    return ret
 
 
 def load_model(model_file=None, label_file=None):
     """
     Load model and labels.
     """
-    if not model_file:
-        model_file = MODEL
-    if not label_file:
-        label_file = LABEL_FILE
+    global engine, labels
 
     engine = DetectionEngine(model_file)
     print("\n Loaded engine with model : {}".format(model_file))
@@ -111,95 +68,56 @@ def load_model(model_file=None, label_file=None):
     print("\n Loaded labels from file : {}".format(label_file))
 
 
-@app.route("/")
-def info():
-    info_str = "Flask app exposing tensorflow models via Google Coral.\n"
-    return info_str
-
-
-@app.route('/get_image', methods=["GET"])
-def get_image():
-    return send_file(filename, mimetype='image/gif')
-
-
-# @app.route("/predict", methods=["POST"])
-# def predict():
-#     data = {"success": False}
-#
-#     # ensure an image was properly uploaded to our endpoint
-#     if flask.request.method == "POST":
-#         if flask.request.files.get("image"):
-#             # read the image in PIL format
-#             image_file = flask.request.files["image"]
-#             print(image_file)
-#             image_bytes = image_file.read()
-#             image = Image.open(io.BytesIO(image_bytes))  # PIL img object.
-#
-#             # Run inference.
-#             predictions = engine.DetectWithImage(
-#                 image,
-#                 threshold=0.05,
-#                 keep_aspect_ratio=True,
-#                 relative_coord=False,  # True = relative coordinates 0-1 of original image.
-#                 top_k=10,
-#             )
-#
-#             if predictions:
-#                 data["success"] = True
-#                 preds = []
-#                 for prediction in predictions:
-#                     bounding_box = {
-#                         "x1": round(prediction.bounding_box[0, 0], DECIMALS),
-#                         "x2": round(prediction.bounding_box[1, 0], DECIMALS),
-#                         "y1": round(prediction.bounding_box[0, 1], DECIMALS),
-#                         "y2": round(prediction.bounding_box[1, 1], DECIMALS),
-#                     }
-#                     preds.append(
-#                         {
-#                             "confidence": str(
-#                                 round(100 * prediction.score, DECIMALS)
-#                             ),  # A percentage.
-#                             "label": labels[prediction.label_id],
-#                             "bounding_box": bounding_box,
-#                         }
-#                     )
-#                 data["predictions"] = preds
-#
-#     # return the data dictionary as a JSON response
-#     return flask.jsonify(data)
+def split_stream_from_name(stream_arg):
+    match = re.match(PATTERN_STREAM_INPUT, stream_arg)
+    if match:
+        return match.group(1), match.group(2)
+    raise ValueError("Stream input {} does not match pattern 'name|stream'")
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Google Coral edgetpu flask daemon")
-    parser.add_argument("--quiet", "-q", action='store_true',
-                        help="log only warnings, errors")
-    parser.add_argument("--port", '-p', default=5000,
-                        type=int, choices=range(0, 65536),
-                        help="port number")
-    parser.add_argument("-m", "--model", required=True,
+        description="Google Coral EdgeTPU video stream detection")
+    parser.add_argument("-m", "--{}".format(ARG_MODEL_FILE), required=True,
                         help="path to TensorFlow Lite object detection model")
-    parser.add_argument("-l", "--labels", required=True,
+    parser.add_argument("-l", "--{}".format(ARG_LABEL_FILE), required=True,
                         help="path to labels file")
-    parser.add_argument("-c", "--confidence", type=float, default=0.3,
-                        help="minimum probability to filter weak detections")
+    parser.add_argument("-c", "--{}".format(ARG_CONFIDENCE), type=float, default=70,
+                        help="minimum probability to filter weak detections, percentage")
+    parser.add_argument("-s", "--{}".format(ARG_STREAMS), nargs="+", required=True,
+                        help="video streams to process (name|stream address)")
+    parser.add_argument("-t", "--{}".format(ARG_TYPES), nargs="+", required=False,
+                        help="classifier types to report")
+    parser.add_argument("-h", "--{}".format(ARG_HA_URL), required=True,
+                        help="url for updating home-assistant states")
+    parser.add_argument("-a", "--{}".format(ARG_TOKEN), required=True,
+                        help="long lived home-assistant token for authentication")
     args = parser.parse_args()
 
-    # loop over the class labels file
-    for row in open(args["labels"]):
-        # unpack the row and update the labels dictionary
-        (classID, label) = row.strip().split(maxsplit=1)
-        labels[int(classID)] = label.strip()
-
-    model = DetectionEngine(args["model"])
-
-    vs = cv2.VideoCapture("rtsp://10.0.50.117:7447/5c44c565e4b0b1adf6614d97_0")
-    time.sleep(2.0)
-
-    thread = threading.Thread(target=detect, args=())
+    home_assistant = HomeAssistantApi(args[ARG_HA_URL], args[ARG_TOKEN])
+    thread = threading.Thread(target=home_assistant.run)
     thread.daemon = True
     thread.start()
+    threads.append(thread)
 
-    app.run(host="0.0.0.0", port=args.port)
+    load_model(args[ARG_MODEL_FILE], args[ARG_LABEL_FILE])
+
+    for stream_input in args[ARG_STREAMS]:
+        stream_name = "unknown"
+        stream_url = "n/a"
+        try:
+            stream_name, stream_url = split_stream_from_name(stream_input)
+            video_detect = DetectionThread(stream_name, stream_url, engine, args[ARG_CONFIDENCE], home_assistant.add_request)
+
+            thread = threading.Thread(target=video_detect.detect)
+            thread.daemon = True
+            thread.start()
+            threads.append(thread)
+        except ValueError:
+            LOGGER.error("Unable to start detection for {} at {}".format(stream_name, stream_url))
+
+    while True:
+        time.sleep(5)
+

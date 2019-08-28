@@ -44,7 +44,7 @@ RUN  mkdir /models && \
      curl -q -O  https://dl.google.com/coral/canned_models/coco_labels.txt
 
 RUN apt-get update && \
-    apt-get install -y python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+    apt-get install -y python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
 
 
 COPY requirements.txt ./

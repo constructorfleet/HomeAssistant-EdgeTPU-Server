@@ -34,7 +34,7 @@ RUN wget --trust-server-names -O edgetpu_api.tar.gz  https://dl.google.com/coral
     bash ./install.sh
 
 RUN apt-get update && \
-    apt-get install -y libevent-dev
+    apt-get install -y libevent-dev python python-dev gfortran py-pip build-base py-numpy@community
 
 
 WORKDIR /usr/src/app

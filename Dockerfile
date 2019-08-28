@@ -23,7 +23,7 @@ WORKDIR /tmp
 
 # downloading library file for edgetpu and install it
 RUN wget --trust-server-names -O edgetpu_api.tar.gz  https://dl.google.com/coral/edgetpu_api/edgetpu_api_latest.tar.gz && \
-    tar xzfz edgetpu_api.tar.gz && rm edgetpu_api.tar.gz && \
+    tar xzf edgetpu_api.tar.gz && rm edgetpu_api.tar.gz && \
     cd edgetpu_api && \
     sed -i.orig  \
     	-e 's/^read USE_MAX_FREQ/USE_MAX_FREQ=y/' \
@@ -32,6 +32,9 @@ RUN wget --trust-server-names -O edgetpu_api.tar.gz  https://dl.google.com/coral
       install.sh && \
     apt-get update && apt-get install sudo && \
     bash ./install.sh
+
+RUN apt-get update && \
+    apt-get install -y libevent-dev
 
 
 WORKDIR /usr/src/app

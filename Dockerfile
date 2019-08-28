@@ -42,7 +42,9 @@ RUN  mkdir /models && \
      chdir /models && \
      curl -q -O  https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite  && \
      curl -q -O  https://dl.google.com/coral/canned_models/coco_labels.txt
-     
+
+RUN apt-get update && \
+    apt-get install -y gcc gfortran build-base wget freetype-dev libpng-dev openblas-dev
 
 COPY requirements.txt ./
 RUN  pip install --no-cache-dir -r requirements.txt 

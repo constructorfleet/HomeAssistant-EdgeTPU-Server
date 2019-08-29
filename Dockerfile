@@ -58,7 +58,7 @@ COPY coral-app.py     ./
 ENV MODEL=/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
     LABELS=/models/coco_labels.txt \
     TOKEN=$TOKEN \
-    STREAMS=$STREAM
+    STREAMS=$STREAM \
     URL=$URL
 
 CMD [ "python", "coral-app.py", "-m", "\"${MODEL}\"", "-l", "\"${LABELS}\"", "-h", "${URL}", "-t", "${TOKEN}", "-s", "${STREAMS}" ]

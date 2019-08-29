@@ -19,6 +19,10 @@
 
 FROM python:3.6
 
+ARG URL
+ARG TOKEN
+ARG STREAMS
+
 WORKDIR /tmp
 
 # downloading library file for edgetpu and install it
@@ -46,7 +50,6 @@ RUN  mkdir /models && \
 RUN apt-get update && \
     apt-get install -y python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
 
-
 COPY requirements.txt ./
 RUN  pip install --no-cache-dir -r requirements.txt 
 
@@ -54,9 +57,8 @@ COPY coral-app.py     ./
 
 ENV MODEL=/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
     LABELS=/models/coco_labels.txt \
-    TOKEN="" \
-    STREAMS=""
+    TOKEN=$TOKEN \
+    STREAMS=$STREAM
+    URL=$URL
 
-EXPOSE 5000
-
-CMD [ "python", "coral-app.py", "-m", "\"${MODEL}\"", "-l", "\"${LABELS}\"", "-h", "https://automation.prettybaked.com:8123", "-t", "$TOKEN", "-s", "$STREAMS" ]
+CMD [ "python", "coral-app.py", "-m", "\"${MODEL}\"", "-l", "\"${LABELS}\"", "-h", "${URL}", "-t", "${TOKEN}", "-s", "${STREAMS}" ]

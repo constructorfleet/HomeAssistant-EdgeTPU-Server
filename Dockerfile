@@ -25,6 +25,12 @@ ARG STREAMS
 
 WORKDIR /tmp
 
+RUN apt-get update && \
+    apt-get install -y python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
+
+COPY requirements.txt ./
+RUN  pip install --no-cache-dir -r requirements.txt
+
 # downloading library file for edgetpu and install it
 RUN wget --trust-server-names -O edgetpu_api.tar.gz  https://dl.google.com/coral/edgetpu_api/edgetpu_api_latest.tar.gz && \
     tar xzf edgetpu_api.tar.gz && rm edgetpu_api.tar.gz && \
@@ -37,23 +43,14 @@ RUN wget --trust-server-names -O edgetpu_api.tar.gz  https://dl.google.com/coral
     apt-get update && apt-get install sudo && \
     bash ./install.sh
 
-
 WORKDIR /usr/src/app
 
-# fetch the models.  maybe figure a way to conditionalize this?
-# create models subdirectory for volume mount of custom models
 RUN  mkdir /models && \
      chdir /models && \
      curl -q -O  https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite  && \
      curl -q -O  https://dl.google.com/coral/canned_models/coco_labels.txt
 
-RUN apt-get update && \
-    apt-get install -y python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
-
-COPY requirements.txt ./
-RUN  pip install --no-cache-dir -r requirements.txt 
-
-COPY coral-app.py     ./
+COPY coral-app.py ./
 
 ENV MODEL=/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
     LABELS=/models/coco_labels.txt \

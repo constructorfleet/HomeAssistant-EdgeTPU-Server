@@ -31,13 +31,12 @@ class DetectionThread:
 
     def detect(self):
         # loop over the frames from the video stream
-        while True:
+        while self._video_stream.isOpened():
             # grab the frame from the threaded video stream and resize it
             # to have a maximum width of 500 pixels
             ret, frame = self._video_stream.read()
             if not ret:
                 print("Error %s" % str(ret))
-                self._video_stream = cv2.VideoCapture(self._stream_url)
                 time.sleep(5.0)
                 continue
 

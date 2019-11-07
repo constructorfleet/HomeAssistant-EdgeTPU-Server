@@ -19,7 +19,7 @@ class DetectionThread:
     _add_request = None
 
     def __init__(self, name, stream_url, detection_engine, confidence, labels, add_request):
-        LOGGER.info("Stream %s" % stream_url)
+        print("Stream %s" % stream_url)
         self._detection_engine = detection_engine
         self._name = name
         self._video_stream = cv2.VideoCapture(stream_url)

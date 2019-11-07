@@ -36,6 +36,7 @@ class DetectionThread:
             ret, frame = self._video_stream.read()
             if not ret:
                 self._video_stream = cv2.VideoCapture(self._stream_url)
+                time.sleep(5.0)
                 continue
 
             frame = imutils.resize(frame, width=500)

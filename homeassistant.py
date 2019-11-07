@@ -92,7 +92,7 @@ class HomeAssistantApi:
     def _perform_request(self, state_request):
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
-            data=state_request,
+            data=state_request.body,
             headers={
                 HEADER_AUTH_KEY: self._get_auth_header()
             }

@@ -102,7 +102,7 @@ class HomeAssistantApi:
         print("Body %s" % json.dumps(state_request.body))
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
-            json=json.dumps(state_request.body),
+            json=state_request.body,
             headers=headers
         )
 

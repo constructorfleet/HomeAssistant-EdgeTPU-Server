@@ -1,5 +1,6 @@
 import logging
 import queue
+import time
 
 import requests
 
@@ -62,6 +63,7 @@ class HomeAssistantApi:
         self._token = token
 
     def add_request(self, name, matches, total_matches):
+        print('Adding request')
         self._queue.put(StateRequest(name, matches, total_matches))
 
     def run(self):
@@ -69,9 +71,11 @@ class HomeAssistantApi:
             try:
                 req = self._queue.get(timeout=5)
             except queue.Empty:
+                time.sleep(5)
                 continue
 
             if not req:
+                time.sleep(5)
                 continue
 
             try:

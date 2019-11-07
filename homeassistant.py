@@ -77,7 +77,7 @@ class HomeAssistantApi:
             try:
                 self._perform_request(req)
             except requests.HTTPError:
-                LOGGER.error("Error updating state for {}".format(req.entity_id))
+                print("Error updating state for {}".format(req.entity_id))
 
     def _get_endpoint(self, entity_id):
         return ENDPOINT_POST_STATE_TEMPLATE.format(self._url, entity_id)

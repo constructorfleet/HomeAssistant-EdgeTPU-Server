@@ -57,7 +57,7 @@ class DetectionThread:
             results = self._detection_engine.DetectWithImage(frame, threshold=self._confidence / 100,
                                                              keep_aspect_ratio=True, relative_coord=False)
             end = time.time()
-            LOGGER.info("Detection time or {}: {} s".format(self._name, (end - start)))
+            print("Detection time or {}: {} s".format(self._name, (end - start)))
 
             matches = {}
             total_matches = 0
@@ -78,13 +78,3 @@ class DetectionThread:
                 total_matches += 1
 
             self._add_request(self._name, matches, total_matches)
-
-                # # draw the bounding box and label on the image
-                # cv2.rectangle(orig, (startX, startY), (endX, endY),
-                #               (0, 255, 0), 2)
-                # y = startY - 15 if startY - 15 > 15 else startY + 15
-                # text = "{}: {:.2f}%".format(label, r.score * 100)
-                # cv2.putText(orig, text, (startX, y),
-                #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-            # cv2.imwrite("filename", orig)

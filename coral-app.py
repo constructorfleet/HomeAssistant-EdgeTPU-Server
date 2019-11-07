@@ -119,5 +119,5 @@ if __name__ == "__main__":
             LOGGER.error("Unable to start detection for {} at {}".format(stream_name, stream_url))
 
     while True:
-        time.sleep(5)
+        time.sleep(300)
 

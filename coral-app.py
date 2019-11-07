@@ -90,7 +90,7 @@ if __name__ == "__main__":
                         help="video streams to process (name|stream address)")
     parser.add_argument("-t", "--{}".format(ARG_TYPES), nargs="+", required=False,
                         help="classifier types to report")
-    parser.add_argument("-h", "--{}".format(ARG_HA_URL), required=True,
+    parser.add_argument("-u", "--{}".format(ARG_HA_URL), required=True,
                         help="url for updating home-assistant states")
     parser.add_argument("-a", "--{}".format(ARG_TOKEN), required=True,
                         help="long lived home-assistant token for authentication")

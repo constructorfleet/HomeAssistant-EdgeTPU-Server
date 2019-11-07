@@ -34,7 +34,10 @@ class DetectionThread:
         while self._video_stream.isOpened():
             # grab the frame from the threaded video stream and resize it
             # to have a maximum width of 500 pixels
-            ret, frame = self._video_stream.read()
+            try:
+                ret, frame = self._video_stream.read()
+            except cv2.error as e:
+                print(e)
             if not ret:
                 print("Error %s" % str(ret))
                 time.sleep(5.0)

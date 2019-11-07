@@ -27,7 +27,7 @@ class DetectionThread:
         self._confidence = confidence
         self._labels = labels
         self._add_request = add_request
-        time.sleep(5.0)
+        time.sleep(2.0)
 
     def detect(self):
         # loop over the frames from the video stream

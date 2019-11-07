@@ -1,3 +1,4 @@
+import json
 import logging
 import queue
 import time
@@ -98,10 +99,10 @@ class HomeAssistantApi:
         }
         print("Endpoint %s" % self._get_endpoint(state_request.entity_id))
         print("Headers %s" % str(headers))
-        print("Body %s" % str(state_request.body))
+        print("Body %s" % json.dumps(state_request.body))
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
-            data=state_request.body,
+            json=json.dumps(state_request.body),
             headers=headers
         )
 

@@ -105,6 +105,6 @@ class HomeAssistantApi:
             headers=headers
         )
 
-        print("Response %s" % str(response))
+        print("Response %s" % str(response.text))
 
         response.raise_for_status()

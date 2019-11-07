@@ -13,6 +13,8 @@ DOMAIN = "image_processing"
 ENDPOINT_POST_STATE_TEMPLATE = "{}/api/states/{}"
 HEADER_AUTH_KEY = "Authorization"
 HEADER_AUTH_VALUE = "Bearer {}"
+HEADER_CONTENT_TYPE_KEY = "Content-Type"
+HEADER_CONTENT_TYPE_VALUE = "application/json"
 KEY_STATE = "state"
 KEY_ATTRIBUTES = "attributes"
 
@@ -90,15 +92,19 @@ class HomeAssistantApi:
         return HEADER_AUTH_VALUE.format(self._token)
 
     def _perform_request(self, state_request):
+        headers = {
+            HEADER_AUTH_KEY: self._get_auth_header(),
+            HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
+        }
         print("Endpoint %s" % self._get_endpoint(state_request.entity_id))
-        print("Headers %s" % str(self._get_auth_header()))
+        print("Headers %s" % str(headers))
         print("Body %s" % str(state_request.body))
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
             data=state_request.body,
-            headers={
-                HEADER_AUTH_KEY: self._get_auth_header()
-            }
+            headers=headers
         )
+
+        print("Response %s" % str(response))
 
         response.raise_for_status()

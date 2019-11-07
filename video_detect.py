@@ -22,6 +22,7 @@ class DetectionThread:
         self._detection_engine = detection_engine
         self._name = name
         self._video_stream = cv2.VideoCapture(stream_url)
+        self._stream_url = stream_url
         self._confidence = confidence
         self._labels = labels
         self._add_request = add_request
@@ -33,6 +34,10 @@ class DetectionThread:
             # grab the frame from the threaded video stream and resize it
             # to have a maximum width of 500 pixels
             ret, frame = self._video_stream.read()
+            if not ret:
+                self._video_stream = cv2.VideoCapture(self._stream_url)
+                continue
+
             frame = imutils.resize(frame, width=500)
             orig = frame.copy()
 

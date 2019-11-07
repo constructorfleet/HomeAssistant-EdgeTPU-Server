@@ -109,7 +109,7 @@ if __name__ == "__main__":
         stream_url = "n/a"
         try:
             stream_name, stream_url = split_stream_from_name(stream_input)
-            video_detect = DetectionThread(stream_name, stream_url, engine, args.confidence, home_assistant.add_request)
+            video_detect = DetectionThread(stream_name, stream_url, engine, args.confidence, labels, home_assistant.add_request)
 
             thread = threading.Thread(target=video_detect.detect)
             thread.daemon = True

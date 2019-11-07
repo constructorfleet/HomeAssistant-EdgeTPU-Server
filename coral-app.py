@@ -11,7 +11,7 @@ from video_detect import DetectionThread
 LOGGER = logging.getLogger(__name__)
 
 ARG_CONFIDENCE = "confidence"
-ARG_HA_URL = "home-assistant"
+ARG_HA_URL = "homeassistant"
 ARG_LABEL_FILE = "labels"
 ARG_MODEL_FILE = "model"
 ARG_STREAMS = "streams"
@@ -96,20 +96,20 @@ if __name__ == "__main__":
                         help="long lived home-assistant token for authentication")
     args = parser.parse_args()
 
-    home_assistant = HomeAssistantApi(args[ARG_HA_URL], args[ARG_TOKEN])
+    home_assistant = HomeAssistantApi(args.homeassistant, args.token)
     thread = threading.Thread(target=home_assistant.run)
     thread.daemon = True
     thread.start()
     threads.append(thread)
 
-    load_model(args[ARG_MODEL_FILE], args[ARG_LABEL_FILE])
+    load_model(args.model, args.labels)
 
-    for stream_input in args[ARG_STREAMS]:
+    for stream_input in args.streams:
         stream_name = "unknown"
         stream_url = "n/a"
         try:
             stream_name, stream_url = split_stream_from_name(stream_input)
-            video_detect = DetectionThread(stream_name, stream_url, engine, args[ARG_CONFIDENCE], home_assistant.add_request)
+            video_detect = DetectionThread(stream_name, stream_url, engine, args.confidence, home_assistant.add_request)
 
             thread = threading.Thread(target=video_detect.detect)
             thread.daemon = True

@@ -36,7 +36,7 @@ class DetectionThread:
             # to have a maximum width of 500 pixels
             try:
                 ret, frame = self._video_stream.read()
-            except cv2.error as e:
+            except Exception as e:
                 print(e)
             if not ret:
                 print("Error %s" % str(ret))

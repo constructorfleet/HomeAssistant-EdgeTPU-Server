@@ -69,8 +69,10 @@ class DetectionThread:
             for r in results:
                 label = self._labels.get(r.label_id, None)
                 if not label or label not in self._types:
+                    print("Discarding label {}".format(label))
                     continue
                 score = r.score * 100
+                print("Label {} {}".format(label, str(score)))
                 if label not in matches:
                     matches[label] = []
 

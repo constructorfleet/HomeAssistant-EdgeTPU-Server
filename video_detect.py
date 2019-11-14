@@ -61,7 +61,6 @@ class DetectionThread:
             results = self._detection_engine.DetectWithImage(frame, threshold=self._confidence / 100,
                                                              keep_aspect_ratio=True, relative_coord=False)
             end = time.time()
-            print("Detection time for {}: {} s".format(self._name, (end - start)))
             print("Results {}".format(str(len(results))))
             matches = {}
             total_matches = 0
@@ -84,3 +83,4 @@ class DetectionThread:
                 total_matches += 1
 
             self._add_request(self._name, matches, total_matches)
+            print("Detection time for {}: {} s".format(self._name, (end - start)))

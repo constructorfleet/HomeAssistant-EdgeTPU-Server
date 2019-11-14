@@ -97,9 +97,9 @@ class HomeAssistantApi:
             HEADER_AUTH_KEY: self._get_auth_header(),
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
-        print("Endpoint %s" % self._get_endpoint(state_request.entity_id))
-        print("Headers %s" % str(headers))
-        print("Body %s" % json.dumps(state_request.body))
+        # print("Endpoint %s" % self._get_endpoint(state_request.entity_id))
+        # print("Headers %s" % str(headers))
+        # print("Body %s" % json.dumps(state_request.body))
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
             json=state_request.body,

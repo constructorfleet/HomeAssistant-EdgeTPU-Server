@@ -110,7 +110,6 @@ if __name__ == "__main__":
                 engine,
                 args.confidence,
                 labels,
-                home_assistant.add_request,
                 args.types
             )
 

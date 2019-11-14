@@ -52,6 +52,8 @@ class DetectionThread:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame = Image.fromarray(frame)
 
+            frame.save("/tmp/frame.jpg")
+
             # make predictions on the input frame
             start = time.time()
             results = self._detection_engine.DetectWithImage(frame, threshold=self._confidence / 100,

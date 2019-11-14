@@ -96,12 +96,6 @@ if __name__ == "__main__":
                         help="long lived home-assistant token for authentication")
     args = parser.parse_args()
 
-    home_assistant = HomeAssistantApi(args.homeassistant, args.token)
-    thread = threading.Thread(target=home_assistant.run)
-    thread.daemon = True
-    thread.start()
-    threads.append(thread)
-
     load_model(args.model, args.labels)
 
     for stream_input in args.streams:
@@ -110,6 +104,7 @@ if __name__ == "__main__":
         try:
             stream_name, stream_url = split_stream_from_name(stream_input)
             video_detect = DetectionThread(
+                HomeAssistantApi(args.homeassistant, args.token),
                 stream_name,
                 stream_url,
                 engine,

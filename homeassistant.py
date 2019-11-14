@@ -68,35 +68,17 @@ class StateRequest:
 class HomeAssistantApi:
     _url = None
     _token = None
-    _queue = queue.Queue()
-    _last_request = None
 
     def __init__(self, url, token):
         self._url = url
         self._token = token
 
-    def add_request(self, name, matches, total_matches):
+    def perform_request(self, name, matches, total_matches):
         req = StateRequest(name, matches, total_matches)
-        if self._last_request == req:
-            return
-        self._queue.put(req)
-
-    def run(self):
-        while True:
-            try:
-                req = self._queue.get(timeout=5)
-            except queue.Empty:
-                time.sleep(0.5)
-                continue
-
-            if not req:
-                time.sleep(0.5)
-                continue
-
-            try:
-                self._perform_request(req)
-            except requests.HTTPError as e:
-                print("Error updating state for {} {}".format(req.entity_id, e))
+        try:
+            self._perform_request(req)
+        except requests.HTTPError as e:
+            print("Error updating state for {} {}".format(req.entity_id, e))
 
     def _get_endpoint(self, entity_id):
         return ENDPOINT_POST_STATE_TEMPLATE.format(self._url, entity_id)
@@ -109,15 +91,10 @@ class HomeAssistantApi:
             HEADER_AUTH_KEY: self._get_auth_header(),
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
-        # print("Endpoint %s" % self._get_endpoint(state_request.entity_id))
-        # print("Headers %s" % str(headers))
-        # print("Body %s" % json.dumps(state_request.body))
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
             json=state_request.body,
             headers=headers
         )
-
-        print("Response %s" % str(response.text))
 
         response.raise_for_status()

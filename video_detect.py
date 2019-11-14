@@ -11,23 +11,22 @@ ATTR_BOX = "box"
 
 
 class DetectionThread:
+    _hass = None
     _name = None
     _video_stream = None
     _detection_engine = None
     _confidence = None
     _labels = None
     _types = None
-    _add_request = None
 
-    def __init__(self, name, stream_url, detection_engine, confidence, labels, add_request, types):
-        print("Stream %s" % stream_url)
+    def __init__(self, hass, name, stream_url, detection_engine, confidence, labels, types):
+        self._hass = hass
         self._detection_engine = detection_engine
         self._name = name
         self._video_stream = cv2.VideoCapture(stream_url)
         self._stream_url = stream_url
         self._confidence = confidence
         self._labels = labels
-        self._add_request = add_request
         self._types = types
         time.sleep(2.0)
 
@@ -80,5 +79,5 @@ class DetectionThread:
                 })
                 total_matches += 1
 
-            self._add_request(self._name, matches, total_matches)
+            self._hass.perform_request(self._name, matches, total_matches)
             print("Detection time for {}: {} s".format(self._name, (end - start)))

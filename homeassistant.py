@@ -55,19 +55,31 @@ class StateRequest:
             KEY_ATTRIBUTES: self.attributes
         }
 
+    def __eq__(self, other):
+        if isinstance(other, StateRequest):
+            return self.entity_id == other.entity_id \
+                    and json.dumps(self.attributes) == json.dumps(other.attributes)
+        return False
+
+    def __hash__(self):
+        return hash("%s%s" % (self.entity_id, json.dumps(self.attributes)))
+
 
 class HomeAssistantApi:
     _url = None
     _token = None
     _queue = queue.Queue()
+    _last_request = None
 
     def __init__(self, url, token):
         self._url = url
         self._token = token
 
     def add_request(self, name, matches, total_matches):
-        print('Adding request')
-        self._queue.put(StateRequest(name, matches, total_matches))
+        req = StateRequest(name, matches, total_matches)
+        if self._last_request == req:
+            return
+        self._queue.put(req)
 
     def run(self):
         while True:

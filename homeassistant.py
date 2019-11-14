@@ -74,11 +74,11 @@ class HomeAssistantApi:
             try:
                 req = self._queue.get(timeout=5)
             except queue.Empty:
-                time.sleep(5)
+                time.sleep(0.5)
                 continue
 
             if not req:
-                time.sleep(5)
+                time.sleep(0.5)
                 continue
 
             try:

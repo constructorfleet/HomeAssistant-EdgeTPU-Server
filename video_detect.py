@@ -84,4 +84,3 @@ class DetectionThread:
 
             self._add_request(self._name, matches, total_matches)
             print("Detection time for {}: {} s".format(self._name, (end - start)))
-            time.sleep(1.0)

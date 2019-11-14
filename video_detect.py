@@ -18,12 +18,13 @@ class DetectionThread:
     _confidence = None
     _labels = None
     _types = None
+    _stream_url = None
 
     def __init__(self, hass, name, stream_url, detection_engine, confidence, labels, types):
         self._hass = hass
+        self._stream_url = stream_url
         self._detection_engine = detection_engine
         self._name = name
-        self._video_stream = cv2.VideoCapture(stream_url)
         self._stream_url = stream_url
         self._confidence = confidence
         self._labels = labels
@@ -32,11 +33,12 @@ class DetectionThread:
 
     def detect(self):
         # loop over the frames from the video stream
-        while self._video_stream.isOpened():
+        while True:
+            video_stream = cv2.VideoCapture(self._stream_url)
             # grab the frame from the threaded video stream and resize it
             # to have a maximum width of 500 pixels
             try:
-                ret, frame = self._video_stream.read()
+                ret, frame = video_stream.read()
             except Exception as e:
                 print(e)
             if not ret:

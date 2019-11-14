@@ -38,7 +38,7 @@ class DetectionThread:
                 ret, frame = self._video_stream.read()
             except Exception as e:
                 print(e)
-            if not ret or not frame:
+            if not ret:
                 print("Error %s" % str(ret))
                 time.sleep(5.0)
                 continue

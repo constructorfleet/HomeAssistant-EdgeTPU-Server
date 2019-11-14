@@ -38,7 +38,7 @@ class DetectionThread:
                 ret, frame = self._video_stream.read()
             except Exception as e:
                 print(e)
-            if not ret:
+            if not ret or not frame:
                 print("Error %s" % str(ret))
                 time.sleep(5.0)
                 continue
@@ -57,15 +57,16 @@ class DetectionThread:
             results = self._detection_engine.DetectWithImage(frame, threshold=self._confidence / 100,
                                                              keep_aspect_ratio=True, relative_coord=False)
             end = time.time()
-            print("Detection time or {}: {} s".format(self._name, (end - start)))
-
+            print("Detection time for {}: {} s".format(self._name, (end - start)))
+            print("Results {}".format(str(len(results))))
             matches = {}
             total_matches = 0
+
             for r in results:
                 label = self._labels.get(r.label_id, None)
                 if not label:
                     continue
-
+                print("Label {}".format(label))
                 score = r.score * 100
                 if label not in matches:
                     matches[label] = []

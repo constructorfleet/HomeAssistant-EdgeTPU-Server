@@ -73,7 +73,7 @@ class DetectionThread:
                 if label not in matches:
                     matches[label] = []
 
-                box = r.bounding_box.flatten().toList()
+                box = r.bounding_box.flatten().tolist()
                 matches[label].append({
                     ATTR_SCORE: score,
                     ATTR_BOX: box

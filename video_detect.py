@@ -16,9 +16,10 @@ class DetectionThread:
     _detection_engine = None
     _confidence = None
     _labels = None
+    _types = None
     _add_request = None
 
-    def __init__(self, name, stream_url, detection_engine, confidence, labels, add_request):
+    def __init__(self, name, stream_url, detection_engine, confidence, labels, add_request, types):
         print("Stream %s" % stream_url)
         self._detection_engine = detection_engine
         self._name = name
@@ -27,6 +28,7 @@ class DetectionThread:
         self._confidence = confidence
         self._labels = labels
         self._add_request = add_request
+        self._types = types
         time.sleep(2.0)
 
     def detect(self):
@@ -66,9 +68,8 @@ class DetectionThread:
 
             for r in results:
                 label = self._labels.get(r.label_id, None)
-                if not label:
+                if not label or label not in self._types:
                     continue
-                print("Label {}".format(label))
                 score = r.score * 100
                 if label not in matches:
                     matches[label] = []

@@ -94,7 +94,8 @@ class HomeAssistantApi:
         response = requests.post(
             self._get_endpoint(state_request.entity_id),
             json=state_request.body,
-            headers=headers
+            headers=headers,
+            timeout=2.0
         )
 
         response.raise_for_status()

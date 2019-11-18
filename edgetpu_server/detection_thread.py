@@ -29,7 +29,7 @@ class DetectionThread(Thread):
             self.start()
 
     def _retrieve_frame(self):
-        start = datetime.now()
+        start = datetime.now().timestamp()
         _LOGGER.warning("Stream %s",
                         self.entity_stream.stream_url)
         video_stream = \
@@ -54,7 +54,7 @@ class DetectionThread(Thread):
 
         _LOGGER.warning(
             "Retrieving frame took %d ms time for %s (%s)",
-            datetime.now() - start,
+            (datetime.now().timestamp()) - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
         )
@@ -62,7 +62,7 @@ class DetectionThread(Thread):
         return Image.fromarray(frame)
 
     def _process_frame(self, frame):
-        start = datetime.now()
+        start = datetime.now().timestamp()
         detection_entity = DetectionEntity(
             self.entity_stream.entity_id,
             self.engine.filtered_detect_with_image(frame)
@@ -70,7 +70,7 @@ class DetectionThread(Thread):
 
         _LOGGER.warning(
             "Processing frame took %d ms time for %s (%s)",
-            datetime.now() - start,
+            datetime.now().timestamp() - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
         )
@@ -78,7 +78,7 @@ class DetectionThread(Thread):
         return detection_entity
 
     def _set_state(self, detection_entity):
-        start = datetime.now()
+        start = datetime.now().timestamp()
         try:
             self.hass.set_entity_state(detection_entity)
         except Exception as err:
@@ -90,7 +90,7 @@ class DetectionThread(Thread):
 
         _LOGGER.warning(
             "Setting entity state took %d ms time for %s (%s)",
-            datetime.now() - start,
+            datetime.now().timestamp() - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
         )
@@ -98,7 +98,7 @@ class DetectionThread(Thread):
     def run(self):
         """Loop through video stream frames and detect objects."""
         while True:
-            start = datetime.now()
+            start = datetime.now().timestamp()
             frame = self._retrieve_frame()
             if frame is None:
                 _LOGGER.warning(
@@ -114,7 +114,7 @@ class DetectionThread(Thread):
 
             _LOGGER.warning(
                 "Detection loop took %d ms time for %s (%s)",
-                datetime.now() - start,
+                datetime.now().timestamp() - start,
                 self.entity_stream.entity_id,
                 self.entity_stream.stream_url
             )

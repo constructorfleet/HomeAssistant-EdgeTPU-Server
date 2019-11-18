@@ -21,7 +21,7 @@ class HomeAssistantApi:
         }
         response = requests.post(
             self._get_endpoint(detection_entity.entity_id),
-            json=detection_entity.as_api_payload,
+            json=detection_entity.as_api_payload(),
             headers=headers,
             timeout=1.0
         )

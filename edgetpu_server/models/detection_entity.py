@@ -10,15 +10,6 @@ KEY_STATE = "state"
 KEY_ATTRIBUTES = "attributes"
 
 
-class DetectionEntry(dict):
-    """Data structure for holding object detection information."""
-
-    def __init__(self, labeled_detection_candidate):
-        dict.__init__(self)
-        self[ATTR_SCORE] = labeled_detection_candidate.percent_score
-        self.box = labeled_detection_candidate.coordinate_list
-
-
 class DetectionEntity:
     """Data structure for holding detection an entity's state."""
 

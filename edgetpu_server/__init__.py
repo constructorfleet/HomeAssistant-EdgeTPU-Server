@@ -46,9 +46,9 @@ class EdgeTPUServer:
         labels = _read_label_file(label_path)
         self.engine = FilteredDetectionEngine(
             DetectionFilter(
+                confidence,
                 labels,
-                labels_to_report,
-                confidence
+                labels_to_report
             ),
             model_path
         )

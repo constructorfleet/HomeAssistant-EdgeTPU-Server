@@ -36,7 +36,7 @@ class DetectionThread(Thread):
                           str(err))
             return None
 
-        if not ret or not frame:
+        if not ret or frame is None:
             return None
 
         frame = cv2.cvtColor(

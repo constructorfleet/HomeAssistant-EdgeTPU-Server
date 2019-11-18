@@ -55,7 +55,7 @@ class EdgeTPUServer:
             model_path
         )
         self.threads = []
-        self.running = start_thread
+        self.running = True
         for stream in streams:
             entity_id, stream_url = _split_stream_from_name(stream)
             self.threads.append(DetectionThread(

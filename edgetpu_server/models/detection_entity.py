@@ -17,7 +17,7 @@ class DetectionEntity:
         self.entity_id = entity_id
         self.total_count = len(labeled_detection_candidates),
         self.object_detection_map = {
-            label: [DetectionEntity._get_detection_entry(candidate) for candidate in group]
+            label: [DetectionEntity._get_detection_entry(candidate) for candidate in list(group)]
             for label, group in groupby(labeled_detection_candidates, key=lambda x: x.label)
         }
 
@@ -35,7 +35,7 @@ class DetectionEntity:
                 ATTR_MATCHES: self.object_detection_map,
                 ATTR_TOTAL_MATCHES: self.total_count,
                 ATTR_SUMMARY: {
-                    len(entries) for label, entries in self.object_detection_map.items()
+                    label: len(entries) for label, entries in self.object_detection_map.items()
                 }
             }
         }

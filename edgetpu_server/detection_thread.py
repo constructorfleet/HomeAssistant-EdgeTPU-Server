@@ -52,7 +52,7 @@ class DetectionThread(Thread):
             cv2.COLOR_BGR2RGB  # pylint: disable=no-member
         )  # pylint: disable=no-member
 
-        _LOGGER.debug(
+        _LOGGER.warning(
             "Retrieving frame took %d ms time for %s (%s)",
             datetime.now() - start,
             self.entity_stream.entity_id,
@@ -68,7 +68,7 @@ class DetectionThread(Thread):
             self.engine.filtered_detect_with_image(frame)
         )
 
-        _LOGGER.debug(
+        _LOGGER.warning(
             "Processing frame took %d ms time for %s (%s)",
             datetime.now() - start,
             self.entity_stream.entity_id,
@@ -88,7 +88,7 @@ class DetectionThread(Thread):
                 str(err)
             )
 
-        _LOGGER.debug(
+        _LOGGER.warning(
             "Setting entity state took %d ms time for %s (%s)",
             datetime.now() - start,
             self.entity_stream.entity_id,
@@ -112,7 +112,7 @@ class DetectionThread(Thread):
 
             self._set_state(detection_entity)
 
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "Detection loop took %d ms time for %s (%s)",
                 datetime.now() - start,
                 self.entity_stream.entity_id,

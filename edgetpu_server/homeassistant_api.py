@@ -1,4 +1,7 @@
 import requests
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 ENDPOINT_POST_STATE_TEMPLATE = "{}/api/states/{}"
 HEADER_AUTH_KEY = "Authorization"
@@ -19,6 +22,8 @@ class HomeAssistantApi:
             HEADER_AUTH_KEY: self._get_auth_header(),
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
+        _LOGGER.info("Payload: %s",
+                     detection_entity.as_api_payload)
         response = requests.post(
             self._get_endpoint(detection_entity.entity_id),
             json=detection_entity.as_api_payload(),

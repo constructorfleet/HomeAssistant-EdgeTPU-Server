@@ -2,12 +2,13 @@
 import logging
 import time
 from datetime import datetime
-from threading import Thread
+from threading import Thread, Lock
 
 import cv2
 import imutils
 from PIL import Image
 
+from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.models.detection_entity import DetectionEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,25 +22,31 @@ CV_CAP_PROP_POS_FRAMES = 1
 class DetectionThread(Thread):
     """Image detection thread."""
 
-    def __init__(self, entity_stream, engine, hass, start_thread):
+    def __init__(self, entity_stream, engine, hass):
+        self.lock = Lock()
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
         self.video_stream = \
             cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
+        self.frame_grabber = FrameGrabberThread(
+            self.video_stream,
+            self.lock
+        )
         Thread.__init__(self, target=self.run())
         self.daemon = True
-        if start_thread:
-            self.start()
+        self.start()
 
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
         try:
-            self.video_stream.set(
-                CV_CAP_PROP_POS_FRAMES,
-                self.video_stream.get(CV_CAP_PROP_FRAME_COUNT)
-            )
-            ret, frame = self.video_stream.read()
+            # self.video_stream.set(
+            #     CV_CAP_PROP_POS_FRAMES,
+            #     self.video_stream.get(CV_CAP_PROP_FRAME_COUNT)
+            # )
+            with self.lock:
+                _LOGGER.warning("Retrieving frame")
+                ret, frame = self.video_stream.retrieve()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))

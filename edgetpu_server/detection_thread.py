@@ -21,8 +21,8 @@ class DetectionThread(Thread):
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
-        self.daemon = True
         Thread.__init__(self, target=self.run())
+        self.daemon = True
         if start_thread:
             self.start()
 

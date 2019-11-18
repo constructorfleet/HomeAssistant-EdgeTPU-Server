@@ -31,8 +31,8 @@ def main():
         args.confidence,
         args.streams,
         HomeAssistantConfig(
-            args.token,
-            args.haurl
+            args.haurl,
+            args.token
         ),
         True
     )

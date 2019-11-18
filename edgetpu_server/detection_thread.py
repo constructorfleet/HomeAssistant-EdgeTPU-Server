@@ -18,11 +18,11 @@ class DetectionThread(Thread):
     """Image detection thread."""
 
     def __init__(self, entity_stream, engine, hass, start_thread):
-        Thread.__init__(self, target=self.run())
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
         self.daemon = True
+        Thread.__init__(self, target=self.run())
         if start_thread:
             self.start()
 

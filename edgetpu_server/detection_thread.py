@@ -95,7 +95,7 @@ class DetectionThread(Thread):
         while True:
             start = datetime.now()
             frame = self._retrieve_frame()
-            if not frame:
+            if frame is None:
                 _LOGGER.warning(
                     "Unable to retrieve frame, sleeping for %f s",
                     FRAME_FAILURE_SLEEP

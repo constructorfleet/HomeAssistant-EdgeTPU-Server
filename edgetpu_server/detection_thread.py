@@ -29,13 +29,13 @@ class DetectionThread(Thread):
         self.hass = hass
         self.video_stream = \
             cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
+        Thread.__init__(self, target=self.run())
+        self.daemon = True
+        self.start()
         self.frame_grabber = FrameGrabberThread(
             self.video_stream,
             self.lock
         )
-        Thread.__init__(self, target=self.run())
-        self.daemon = True
-        self.start()
 
     def _retrieve_frame(self):
         start = datetime.now().timestamp()

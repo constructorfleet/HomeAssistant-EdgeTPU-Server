@@ -63,7 +63,7 @@ edgetpu-server \
 
 **Example Command**
 ```bash
-python3 coral-app.py \
+edgetpu-server \
     -m /opt/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
     -l /opt/models/coco_labels.txt \
     -u http://10.0.11.174:8123 \

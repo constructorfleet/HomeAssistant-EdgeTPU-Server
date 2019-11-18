@@ -2,13 +2,11 @@
 import logging
 import time
 from datetime import datetime
-from threading import Thread, Lock, Condition
 
 import cv2
 import imutils
 from PIL import Image
 
-from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.models.detection_entity import DetectionEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -19,6 +17,7 @@ CV_CAP_PROP_FRAME_COUNT = 7
 CV_CAP_PROP_POS_FRAMES = 1
 
 
+# pylint: disable=too-few-public-methods
 class DetectionThread:
     """Image detection thread."""
 
@@ -41,7 +40,7 @@ class DetectionThread:
         if not ret:
             return None
 
-        frame = cv2.cvtColor(   # pylint: disable=no-member
+        frame = cv2.cvtColor(  # pylint: disable=no-member
             imutils.resize(
                 frame,
                 width=DEFAULT_WIDTH

@@ -38,7 +38,7 @@ def _read_label_file(file_path):
 class EdgeTPUServer:
     """EdgeTPU Server."""
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     def __init__(
             self,
             model_path,

@@ -1,11 +1,10 @@
 """Frame grabber thread."""
-import time
 import logging
-from threading import Thread
 
 _LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-few-public-methods
 class FrameGrabberThread:
     """Thread that continually grabs frames from a video stream."""
 

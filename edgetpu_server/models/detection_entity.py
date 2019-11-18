@@ -1,4 +1,7 @@
 from itertools import groupby
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 ATTR_MATCHES = "matches"
 ATTR_SUMMARY = "summary"
@@ -15,11 +18,16 @@ class DetectionEntity:
 
     def __init__(self, entity_id, labeled_detection_candidates):
         self.entity_id = entity_id
+        _LOGGER.warning("Candidates %s",
+                        str(labeled_detection_candidates))
         self.total_count = len(labeled_detection_candidates),
         self.object_detection_map = {
             label: [DetectionEntity._get_detection_entry(candidate) for candidate in list(group)]
             for label, group in groupby(labeled_detection_candidates, key=lambda x: x.label)
         }
+
+        _LOGGER.warning("Map %s",
+                        str(self.object_detection_map))
 
     @staticmethod
     def _get_detection_entry(candidate):

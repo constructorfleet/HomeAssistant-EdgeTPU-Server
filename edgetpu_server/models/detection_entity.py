@@ -22,8 +22,6 @@ class DetectionEntry(dict):
 class DetectionEntity:
     """Data structure for holding detection an entity's state."""
 
-    __slots__ = ['entity_id', 'total_count', 'object_detection_map']
-
     def __init__(self, entity_id, labeled_detection_candidates):
         self.entity_id = entity_id
         self.total_count = len(labeled_detection_candidates),

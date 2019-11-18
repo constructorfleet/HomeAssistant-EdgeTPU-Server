@@ -17,8 +17,6 @@ FRAME_FAILURE_SLEEP = 0.5
 class DetectionThread(Thread):
     """Image detection thread."""
 
-    __slots__ = ['entity_stream', 'engine', 'hass']
-
     def __init__(self, entity_stream, engine, hass, start_thread):
         Thread.__init__(self, target=self.run())
         self.entity_stream = entity_stream

@@ -3,7 +3,6 @@ from edgetpu.detection.engine import DetectionCandidate
 
 class LabeledDetectionCandidate(DetectionCandidate):
     """Data structure to hold a labeled detection candidate."""
-    __slots__ = ['label']
 
     def __init__(self, label, detection_candidate):
         DetectionCandidate.__init__(

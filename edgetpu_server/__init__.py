@@ -33,8 +33,6 @@ def _read_label_file(file_path):
 class EdgeTPUServer:
     """EdgeTPU Server."""
 
-    __slots__ = ['engine', 'hass', 'threads', 'running']
-
     def __init__(
             self,
             model_path,
@@ -74,5 +72,3 @@ class EdgeTPUServer:
                 thread.start()
         while True:
             time.sleep(300)
-
-

@@ -54,7 +54,7 @@ class DetectionThread(Thread):
             self.entity_stream.stream_url
         )
 
-        return frame
+        return Image.fromarray(frame)
 
     def _process_frame(self, frame):
         start = datetime.now()

@@ -30,6 +30,8 @@ class DetectionThread(Thread):
 
     def _retrieve_frame(self):
         start = datetime.now()
+        _LOGGER.warning("Stream %s",
+                        self.entity_stream.stream_url)
         video_stream = \
             cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
         try:

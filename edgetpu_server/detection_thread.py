@@ -41,7 +41,7 @@ class DetectionThread(Thread):
         start = datetime.now().timestamp()
         self.lock.acquire()
         try:
-            ret, frame = self.video_stream.retrieve()
+            ret, frame = self.video_stream.read()
             # with self.lock:
             #     _LOGGER.warning("Retrieving frame")
             #     ret, frame = self.video_stream.retrieve()

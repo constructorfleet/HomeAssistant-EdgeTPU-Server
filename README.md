@@ -1,107 +1,79 @@
-Expose deep learning models on a Coral usb accelerator via a Flask app. To run the app and expose over a network: 
-```
-$ python3 coral-app.py
-```
-Then use curl to query:
-```
-$curl -X POST -F image=@people_car.jpg 'http://localhost:5000/predict'
- 
-{'predictions': [{'bounding_box': {'x1': 838.29,
-    'x2': 918.53,
-    'y1': 135.01,
-    'y2': 407.59},
-   'confidence': '95.31',
-   'label': 'person'},
-  {'bounding_box': {'x1': 302.61, 'x2': 613.57, 'y1': 115.94, 'y2': 361.16},
-   'confidence': '91.02',
-   'label': 'car'},
-  {'bounding_box': {'x1': 226.54, 'x2': 350.93, 'y1': 143.46, 'y2': 374.72},
-   'confidence': '58.2',
-   'label': 'person'},
-  {'bounding_box': {'x1': 215.56, 'x2': 346.96, 'y1': 212.26, 'y2': 419.51},
-   'confidence': '26.95',
-   'label': 'bicycle'},
-  {'bounding_box': {'x1': 422.38, 'x2': 454.59, 'y1': 171.35, 'y2': 210.02},
-   'confidence': '21.09',
-   'label': 'person'},
-  {'bounding_box': {'x1': 359.8, 'x2': 389.19, 'y1': 161.48, 'y2': 204.62},
-   'confidence': '21.09',
-   'label': 'person'},
-  {'bounding_box': {'x1': 305.36, 'x2': 346.21, 'y1': 147.99, 'y2': 211.31},
-   'confidence': '21.09',
-   'label': 'person'},
-  {'bounding_box': {'x1': 5.55, 'x2': 21.94, 'y1': 9.36, 'y2': 45.3},
-   'confidence': '21.09',
-   'label': 'traffic light'},
-  {'bounding_box': {'x1': 239.76, 'x2': 324.57, 'y1': 260.07, 'y2': 406.78},
-   'confidence': '16.02',
-   'label': 'bicycle'},
-  {'bounding_box': {'x1': 299.75, 'x2': 358.61, 'y1': 154.64, 'y2': 298.7},
-   'confidence': '16.02',
-   'label': 'person'}],
- 'success': True}
-```
+# HomeAssistant-EdgeTPU-Server
 
-See the [Jupyter notebook](https://github.com/robmarkcole/coral-pi-rest-server/blob/master/coral-app-usage.ipynb) for usage with python requests library.
+Performs object detection using an Edge Tensor Processing Unit on a video stream and publishes the state to a specified Home-Assistant instance.
 
-**NOTE:** you need to update the `MODEL` and `LABELS` file paths in `coral-app.py`. For compatability with the way these paths are hard coded in this repo, you can on a pi `cd ~`, `mkdir edgetpu`, `mkdir all_models`, `cd all_models`, `wget https://dl.google.com/coral/canned_models/all_models.tar.gz`, `tar xf all_models.tar.gz`, `rm all_models.tar.gz`
+## Running
 
-## Pi setup
-I am running the server on a pi 3 with the raspi camera below. FYI the camera is mounted on a [pan-tilt stage](https://shop.pimoroni.com/products/pan-tilt-hat).
+### Requirements
 
-<p align="center">
-<img src="https://github.com/robmarkcole/coral-pi-rest-server/blob/master/images/my_setup.png" width="500">
-</p>
+#### External
+* A Google EdgeTPU, either the Coral Dev Board or the USB Accelerator
+* A TensorFlow Lite compiled model file, with associated labels file
+    * Example pre-compiled model file and labels file:
+    ```text
+    https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
+    https://dl.google.com/coral/canned_models/coco_labels.txt
+    ```
+* The URL to your Home-Assistant instance
+* A long-lived token for your Home-Assistant instance
+    1. Log into your Home-Assistant with your user
+    2. Click the profile button at the top of the side-bar
+    3. Click the `Create Token` button at the bottom of the page
+    4. Save the generated token in a password manager for future reference
+* The camera stream URLs you wish to process
+    * It is recommended to use a low resolution around 500 x 500
 
-## Models
-* The official pre-compiled models are at -> https://coral.withgoogle.com/models/
-* It is [also possible to train your own models](https://coral.withgoogle.com/tutorials/edgetpu-models-intro/) -> try using Google Colaboratory as the free environment for training or -> https://cloud-annotations.github.io/training/object-detection/cli/index.html
 
-## To do
-* Simple front end for uploading images -> https://github.com/gxercavins/image-api 
-* Handle traffic -> https://www.pyimagesearch.com/2018/01/29/scalable-keras-deep-learning-rest-api/
+#### Python Packages
+* 
 
-## Home Assistant
-I have published code for using this app with Home Assistant -> [HASS-Google-Coral](https://github.com/robmarkcole/HASS-Google-Coral)
+### Command
 
-## Docker container
-There's a Dockerfile included that will construct a container to run this flask daemon.
-
-By default, it will fetch
-https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
-to use as the model and
-https://dl.google.com/coral/canned_models/coco_labels.txt for labels.
-If you'd like to use alternative model and label files with an already
-built container, you can put them into a directory that's mounted in the container and then
-start the container using `MODEL` and `LABELS` environment variables to refer to the paths
-inside the container.
-
-Build the container like
-```
-$ docker build -t coral .
+To run the service:
+```bash
+python3 coral-app.py \
+    -m $PATH_TO_MODEL_FILE \
+    -l $PATH_TO_LABEL_FILE \
+    -u $HOME_ASSISTANT_BASE_URL \
+    -a $LONG_LIVED_TOKEN \
+    -s [$ENTITY_ID|VIDEO_STREAM_URL ...] \
+    -c $CONFIDENCE \
+    -t [$CATEGORY ...]
 ```
 
-You can start the container with something like:
+**Where:**  
+* `$PATH_TO_MODEL_FILE` is the path to the model (*.tflite) file downloaded above  
+* `$PATH_TO_LABEL_FILE` is the path to the label (*.txt) file downloaded above
+* `$HOME_ASSISTANT_BASE_URL` is the base url of the Home-Assistant instance (e.g. http://192.168.1.100:8123)
+* `$LONG_LIVED_TOKEN` is the token generated above
+* `[$ENTITY_ID|VIDEO_STREAM_URL ...]` is a space separated list of:
+    * `ENTITY_ID` the entity_id to publish this stream's detection information to
+    * `VIDEO_STREAM_URL` the stream url to process
+* `$CONFIDENCE` minimum confidence score (0-100%) to report an object detected
+* `[$CATEGORY ...]` is a space separated list of categories to report found in the labels file
+
+**Example Command**
+```bash
+python3 coral-app.py \
+    -m /opt/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
+    -l /opt/models/coco_labels.txt \
+    -u http://10.0.11.174:8123 \
+    -a abc123pozxc \
+    -s sensor.front_door|rtsp://10.0.50.117:8080 sensor.back_door|rtsp://10.0.50.118:8080 \
+    -c 70 \
+    -t person cat dog
 ```
-  docker run --restart=always --detach --name coral \
-          -p 5000:5000 --device /dev/bus/usb:/dev/bus/usb   coral:latest
+   
+### Entity State
+
+```text
+state: count of objects detected
+attributes:
+    matches:
+        category:
+            score: confidence score
+            boxy: bounding box of object detected as [x1, y1, x2, y2]
+    summary:
+        category: count of objects detected by category
+    total_matches: count of objects detected
 ```
-it's important to use the `--device` option to pass in the USB bus device so that the Coral
-edgetpu USB device can be found
-
-Logging produced by the container is sort of broken.  There seems to
-be a mixture of output to STDOUT and STDERR, each independently
-buffered.
-
-
-## References
-* https://github.com/google-coral
-* [Using the official pi camera with Coral](https://github.com/nickoala/edgetpu-on-pi)
-* https://github.com/snmsung716/Following-camera-with-Coral-Accelerator-on-Raspberry-Pi
-* https://github.com/lemariva/raspbian-EdgeTPU
-* [Pyimagesearch article on Coral](https://www.pyimagesearch.com/2019/04/22/getting-started-with-google-corals-tpu-usb-accelerator/)
-* [Hands on with coral + docker](https://lemariva.com/blog/2019/04/edge-tpu-coral-usb-accelerator-dockerized)
-* [Official Raspicam example](https://github.com/google-coral/examples-camera/blob/master/raspicam/classify_capture.py)
-
-## Credit
-I forked the code in this excellent article -> https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html [code](https://github.com/jrosebr1/simple-keras-rest-api)

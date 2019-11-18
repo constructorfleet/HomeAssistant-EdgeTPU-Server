@@ -34,8 +34,7 @@ def main():
         HomeAssistantConfig(
             args.haurl,
             args.token
-        ),
-        True
+        )
     )
 
 

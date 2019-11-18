@@ -43,8 +43,7 @@ class EdgeTPUServer:
             labels_to_report,
             confidence,
             streams,
-            homeassistant_config,
-            start_thread=False
+            homeassistant_config
     ):
         labels = _read_label_file(label_path)
         self.engine = FilteredDetectionEngine(
@@ -62,12 +61,10 @@ class EdgeTPUServer:
             self.threads.append(DetectionThread(
                 EntityStream(entity_id, stream_url),
                 self.engine,
-                HomeAssistantApi(homeassistant_config),
-                start_thread
+                HomeAssistantApi(homeassistant_config)
             ))
 
-        if start_thread:
-            self.run()
+        self.run()
 
     def run(self):
         """Start application loop."""

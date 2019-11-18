@@ -23,36 +23,28 @@ class DetectionThread(Thread):
     """Image detection thread."""
 
     def __init__(self, entity_stream, engine, hass):
-        self.lock = Lock()
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
+        self.frame_grabber = None
         self.video_stream = \
             cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
         Thread.__init__(self, target=self.run())
         self.daemon = True
         self.start()
-        self.frame_grabber = FrameGrabberThread(
-            self.video_stream,
-            self.lock
-        )
 
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
-        self.lock.acquire()
         try:
+            if self.frame_grabber is not None:
+                self.frame_grabber.interrupt = True
             ret, frame = self.video_stream.read()
-            # with self.lock:
-            #     _LOGGER.warning("Retrieving frame")
-            #     ret, frame = self.video_stream.retrieve()
+
+            self.frame_grabber = FrameGrabberThread(self.video_stream)
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
-            self.video_stream = \
-                cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
             return None
-        finally:
-            self.lock.release()
 
         if not ret:
             return None

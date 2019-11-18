@@ -28,7 +28,7 @@ class DetectionThread(Thread):
         self.hass = hass
         self.video_stream = entity_stream.video_stream
         self.lock = lock
-        Thread.__init__(self, target=self.run())
+        Thread.__init__(self, target=self.run(), name="Detection Thread")
         self.daemon = True
         self.start()
 

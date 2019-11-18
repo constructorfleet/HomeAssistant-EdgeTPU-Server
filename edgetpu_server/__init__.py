@@ -1,8 +1,9 @@
 """EdgeTPU Server Module."""
 import logging
 import re
+import threading
 import time
-from threading import Lock
+from threading import Lock, main_thread
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
@@ -80,5 +81,9 @@ class EdgeTPUServer:
         if not self.running:
             for thread in self.threads:
                 thread.start()
+        for t in threading.enumerate():
+            if t is main_thread:
+                continue
+            logging.debug('Thread %s', t.getName())
         while True:
             time.sleep(300)

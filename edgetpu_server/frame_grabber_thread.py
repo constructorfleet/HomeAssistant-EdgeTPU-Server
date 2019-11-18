@@ -12,7 +12,7 @@ class FrameGrabberThread(Thread):
     def __init__(self, video_stream, lock):
         self._video_stream = video_stream
         self.lock = lock
-        Thread.__init__(self, target=self.run())
+        Thread.__init__(self, target=self.run(), name="Frame Grabber")
         self.daemon = True
         self.start()
 

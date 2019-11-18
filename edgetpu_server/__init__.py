@@ -5,6 +5,7 @@ import time
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
 from edgetpu_server.homeassistant_api import HomeAssistantApi
+from edgetpu_server.models.entity_stream import EntityStream
 from edgetpu_server.models.homeassistant_config import HomeAssistantConfig
 
 _LOGGER = logging.getLogger(__name__)
@@ -12,8 +13,8 @@ _LOGGER = logging.getLogger(__name__)
 PATTERN_STREAM_INPUT = "^(.+)\\|(.*)$"
 
 
-def split_stream_from_name(stream_arg):
-    match = re.match(PATTERN_STREAM_INPUT, stream_arg)
+def split_stream_from_name(stream):
+    match = re.match(PATTERN_STREAM_INPUT, stream)
     if match:
         return match.group(1), match.group(2)
     raise ValueError("Stream input {} does not match pattern 'name|stream'")
@@ -40,7 +41,7 @@ class EdgeTPUServer:
             label_path,
             labels_to_report,
             confidence,
-            entity_streams,
+            streams,
             homeassistant_config,
             start_thread=False
     ):
@@ -55,9 +56,10 @@ class EdgeTPUServer:
         )
         self.threads = []
         self.running = start_thread
-        for entity_stream in entity_streams:
+        for stream in streams:
+            entity_id, stream_url = split_stream_from_name(stream)
             self.threads.append(DetectionThread(
-                entity_stream,
+                EntityStream(entity_id, stream_url),
                 self.engine,
                 HomeAssistantApi(homeassistant_config),
                 start_thread

@@ -28,24 +28,6 @@ class DetectionThread(Thread):
         if start_thread:
             self.start()
 
-    def _get_frame(self, width=DEFAULT_WIDTH):
-        ret = None
-        frame = None
-        video_stream = cv2.VideoCapture(self.entity_stream.stream_url)
-        try:
-            ret, frame = video_stream.read()
-        except Exception as err:
-            _LOGGER.error("Error retrieving video frame: %s",
-                          str(err))
-
-        if not ret or not frame:
-            return None
-
-        frame = imutils.resize(frame, width=width)
-
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        return Image.fromarray(frame)
-
     def _retrieve_frame(self):
         start = datetime.now()
         video_stream = cv2.VideoCapture(self.entity_stream.stream_url)

@@ -35,14 +35,11 @@ class DetectionThread(Thread):
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
         try:
-            self.lock.acquire()
-            ret, frame = self.video_stream.read()
+            ret, frame = self.video_stream.retrieve()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
             return None
-        finally:
-            self.lock.release()
 
         if not ret:
             return None
@@ -102,7 +99,9 @@ class DetectionThread(Thread):
         """Loop through video stream frames and detect objects."""
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
+            self.lock.acquire()
             frame = self._retrieve_frame()
+            self.lock.release()
             if frame is None:
                 _LOGGER.warning(
                     "Unable to retrieve frame, sleeping for %f s",

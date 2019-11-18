@@ -14,6 +14,8 @@ _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_WIDTH = 500
 FRAME_FAILURE_SLEEP = 0.5
+CV_CAP_PROP_FRAME_COUNT = 7
+CV_CAP_PROP_POS_FRAMES = 1
 
 
 class DetectionThread(Thread):
@@ -33,6 +35,10 @@ class DetectionThread(Thread):
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
         try:
+            self.video_stream.set(
+                CV_CAP_PROP_POS_FRAMES,
+                self.video_stream.get(CV_CAP_PROP_FRAME_COUNT)
+            )
             ret, frame = self.video_stream.read()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",

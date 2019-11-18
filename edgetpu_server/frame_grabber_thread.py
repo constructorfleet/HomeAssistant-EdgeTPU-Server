@@ -26,3 +26,5 @@ class FrameGrabberThread(Thread):
                 self._video_stream.grab()
             finally:
                 self.lock.release()
+
+            time.sleep(0.1)

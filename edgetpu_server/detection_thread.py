@@ -39,13 +39,9 @@ class DetectionThread(Thread):
 
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
+        self.lock.acquire()
         try:
-
-            self.lock.acquire()
-            try:
-                ret, frame = self.video_stream.retrieve()
-            finally:
-                self.lock.release()
+            ret, frame = self.video_stream.retrieve()
             # with self.lock:
             #     _LOGGER.warning("Retrieving frame")
             #     ret, frame = self.video_stream.retrieve()
@@ -55,6 +51,8 @@ class DetectionThread(Thread):
             self.video_stream = \
                 cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
             return None
+        finally:
+            self.lock.release()
 
         if not ret:
             return None

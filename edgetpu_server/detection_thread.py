@@ -23,6 +23,8 @@ class DetectionThread(Thread):
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
+        self.video_stream = \
+            cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
         Thread.__init__(self, target=self.run())
         self.daemon = True
         if start_thread:
@@ -30,15 +32,13 @@ class DetectionThread(Thread):
 
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
-        _LOGGER.warning("Stream %s",
-                        self.entity_stream.stream_url)
-        video_stream = \
-            cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
         try:
-            ret, frame = video_stream.read()
+            ret, frame = self.video_stream.read()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
+            self.video_stream = \
+                cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
             return None
 
         if not ret:

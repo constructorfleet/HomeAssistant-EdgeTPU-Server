@@ -18,8 +18,9 @@ class DetectionEntity:
 
     def __init__(self, entity_id, labeled_detection_candidates):
         self.entity_id = entity_id
-        _LOGGER.warning("Candidates %s",
-                        str(labeled_detection_candidates))
+        _LOGGER.warning("Candidates %s %d",
+                        str(labeled_detection_candidates),
+                        len(labeled_detection_candidates))
         self.total_count = len(labeled_detection_candidates),
         self.object_detection_map = {
             label: [DetectionEntity._get_detection_entry(candidate) for candidate in list(group)]

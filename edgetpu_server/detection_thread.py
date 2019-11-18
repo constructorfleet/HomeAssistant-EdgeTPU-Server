@@ -2,7 +2,7 @@
 import logging
 import time
 from datetime import datetime
-from threading import Thread, Lock
+from threading import Thread, Lock, Condition
 
 import cv2
 import imutils
@@ -22,13 +22,12 @@ CV_CAP_PROP_POS_FRAMES = 1
 class DetectionThread(Thread):
     """Image detection thread."""
 
-    def __init__(self, entity_stream, engine, hass):
+    def __init__(self, entity_stream, engine, hass, lock):
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
-        self.frame_grabber = None
-        self.video_stream = \
-            cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
+        self.video_stream = entity_stream.video_stream
+        self.lock = lock
         Thread.__init__(self, target=self.run())
         self.daemon = True
         self.start()
@@ -36,15 +35,14 @@ class DetectionThread(Thread):
     def _retrieve_frame(self):
         start = datetime.now().timestamp()
         try:
-            if self.frame_grabber is not None:
-                self.frame_grabber.interrupt = True
+            self.lock.acquire()
             ret, frame = self.video_stream.read()
-
-            self.frame_grabber = FrameGrabberThread(self.video_stream)
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
             return None
+        finally:
+            self.lock.release()
 
         if not ret:
             return None

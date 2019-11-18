@@ -9,14 +9,18 @@ _LOGGER = logging.getLogger(__name__)
 class FrameGrabberThread(Thread):
     """Thread that continually grabs frames from a video stream."""
 
-    def __init__(self, video_stream):
+    def __init__(self, video_stream, lock):
         self._video_stream = video_stream
-        self.interrupt = False
+        self.lock = lock
         Thread.__init__(self, target=self.run())
         self.daemon = True
         self.start()
 
     def run(self):
         """Continuously grab the latest frame from the video stream."""
-        while not self.interrupt and self._video_stream.isOpened():
+        while self._video_stream.isOpened():
+            self.lock.acquire()
+            _LOGGER.warning("Grabbing frame")
             self._video_stream.grab()
+            self.lock.release()
+            time.sleep(0.1)

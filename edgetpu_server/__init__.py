@@ -2,9 +2,11 @@
 import logging
 import re
 import time
+from threading import Lock
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
+from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.homeassistant_api import HomeAssistantApi
 from edgetpu_server.models.entity_stream import EntityStream
 from edgetpu_server.models.homeassistant_config import HomeAssistantConfig
@@ -58,10 +60,17 @@ class EdgeTPUServer:
         self.running = True
         for stream in streams:
             entity_id, stream_url = _split_stream_from_name(stream)
+            entity_stream = EntityStream(entity_id, stream_url)
+            lock = Lock()
             self.threads.append(DetectionThread(
-                EntityStream(entity_id, stream_url),
+                entity_stream,
                 self.engine,
-                HomeAssistantApi(homeassistant_config)
+                HomeAssistantApi(homeassistant_config),
+                lock
+            ))
+            self.threads.append(FrameGrabberThread(
+                entity_stream,
+                lock
             ))
 
         self.run()

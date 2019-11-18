@@ -20,4 +20,3 @@ class FrameGrabberThread:
             _LOGGER.warning("Grabbing frame")
             self._video_stream.grab()
             self.lock.release()
-            time.sleep(0.1)

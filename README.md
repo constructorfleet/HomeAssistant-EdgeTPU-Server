@@ -25,13 +25,22 @@ Performs object detection using an Edge Tensor Processing Unit on a video stream
 
 
 #### Python Packages
-* 
+* certifi==2019.9.11
+* chardet==3.0.4
+* edgetpu==2.11.1
+* idna==2.8
+* imutils==0.5.3
+* numpy==1.17.4
+* opencv-python==4.1.1.26
+* Pillow==6.2.1
+* requests==2.22.0
+* urllib3==1.25.7
 
 ### Command
 
-To run the service:
+To run:
 ```bash
-python3 coral-app.py \
+edgetpu-server \
     -m $PATH_TO_MODEL_FILE \
     -l $PATH_TO_LABEL_FILE \
     -u $HOME_ASSISTANT_BASE_URL \

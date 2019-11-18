@@ -6,14 +6,15 @@ class LabeledDetectionCandidate(DetectionCandidate):
     """Data structure to hold a labeled detection candidate."""
 
     def __init__(self, label, detection_candidate):
+        box = detection_candidate.bounding_box.flatten().tolist()
         DetectionCandidate.__init__(
             self,
             label_id=detection_candidate.label_id,
             score=detection_candidate.score,
-            x1=detection_candidate.x1,
-            y1=detection_candidate.y1,
-            x2=detection_candidate.x2,
-            y2=detection_candidate.y2
+            x1=box[0],
+            y1=box[1],
+            x2=box[2],
+            y2=box[3]
         )
         self.label = label
 

@@ -20,13 +20,13 @@ setuptools.setup(
     install_requires=[
         'certifi==2019.9.11',
         'chardet==3.0.4',
-        'edgetpu==1.9.2',
+        'edgetpu==2.11.1',
         'idna==2.8',
         'imutils==0.5.3',
         'numpy==1.17.4',
-        'opencv-python==4.1.1.26'
-        'Pillow==6.2.1'
-        'requests==2.22.0'
+        'opencv-python==4.1.1.26',
+        'Pillow==6.2.1',
+        'requests==2.22.0',
         'urllib3==1.25.7'
     ],
     test_suite='tests',

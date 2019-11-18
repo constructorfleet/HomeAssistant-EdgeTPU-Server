@@ -25,7 +25,9 @@ class HomeAssistantApi:
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
         _LOGGER.warning("Payload: %s",
-                        json.dumps(detection_entity.as_api_payload))
+                        str(detection_entity.as_api_payload()))
+        _LOGGER.warning("Payload: %s",
+                        json.dumps(detection_entity.as_api_payload()))
         response = requests.post(
             self._get_endpoint(detection_entity.entity_id),
             json=detection_entity.as_api_payload(),

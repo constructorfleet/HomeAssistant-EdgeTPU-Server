@@ -63,7 +63,7 @@ class EdgeTPUServer:
             entity_stream = EntityStream(entity_id, stream_url)
             lock = Lock()
             self.threads.append(FrameGrabberThread(
-                entity_stream,
+                entity_stream.video_stream,
                 lock
             ))
             self.threads.append(DetectionThread(

@@ -1,3 +1,5 @@
+import json
+
 import requests
 import logging
 
@@ -22,8 +24,8 @@ class HomeAssistantApi:
             HEADER_AUTH_KEY: self._get_auth_header(),
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
-        _LOGGER.info("Payload: %s",
-                     detection_entity.as_api_payload)
+        _LOGGER.warning("Payload: %s",
+                        json.dumps(detection_entity.as_api_payload))
         response = requests.post(
             self._get_endpoint(detection_entity.entity_id),
             json=detection_entity.as_api_payload(),

@@ -53,7 +53,7 @@ class DetectionThread(Thread):
         )  # pylint: disable=no-member
 
         _LOGGER.warning(
-            "Retrieving frame took %d ms time for %s (%s)",
+            "Retrieving frame took %f ms time for %s (%s)",
             (datetime.now().timestamp()) - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
@@ -69,7 +69,7 @@ class DetectionThread(Thread):
         )
 
         _LOGGER.warning(
-            "Processing frame took %d ms time for %s (%s)",
+            "Processing frame took %f ms time for %s (%s)",
             datetime.now().timestamp() - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
@@ -89,7 +89,7 @@ class DetectionThread(Thread):
             )
 
         _LOGGER.warning(
-            "Setting entity state took %d ms time for %s (%s)",
+            "Setting entity state took %f ms time for %s (%s)",
             datetime.now().timestamp() - start,
             self.entity_stream.entity_id,
             self.entity_stream.stream_url
@@ -113,7 +113,7 @@ class DetectionThread(Thread):
             self._set_state(detection_entity)
 
             _LOGGER.warning(
-                "Detection loop took %d ms time for %s (%s)",
+                "Detection loop took %f ms time for %s (%s)",
                 datetime.now().timestamp() - start,
                 self.entity_stream.entity_id,
                 self.entity_stream.stream_url

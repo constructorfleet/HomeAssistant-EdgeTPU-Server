@@ -62,14 +62,14 @@ class EdgeTPUServer:
             entity_id, stream_url = _split_stream_from_name(stream)
             entity_stream = EntityStream(entity_id, stream_url)
             lock = Lock()
+            self.threads.append(FrameGrabberThread(
+                entity_stream,
+                lock
+            ))
             self.threads.append(DetectionThread(
                 entity_stream,
                 self.engine,
                 HomeAssistantApi(homeassistant_config),
-                lock
-            ))
-            self.threads.append(FrameGrabberThread(
-                entity_stream,
                 lock
             ))
 

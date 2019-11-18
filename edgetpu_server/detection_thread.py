@@ -1,10 +1,12 @@
-import cv2
-from datetime import datetime
-import time
-import imutils
+"""Thread for processing object detection."""
 import logging
-from PIL import Image
+import time
+from datetime import datetime
 from threading import Thread
+
+import cv2
+import imutils
+from PIL import Image
 
 from edgetpu_server.models.detection_entity import DetectionEntity
 
@@ -28,7 +30,8 @@ class DetectionThread(Thread):
 
     def _retrieve_frame(self):
         start = datetime.now()
-        video_stream = cv2.VideoCapture(self.entity_stream.stream_url)
+        video_stream = \
+            cv2.VideoCapture(self.entity_stream.stream_url)  # pylint: disable=no-member
         try:
             ret, frame = video_stream.read()
         except Exception as err:
@@ -39,13 +42,13 @@ class DetectionThread(Thread):
         if not ret or frame is None:
             return None
 
-        frame = cv2.cvtColor(
+        frame = cv2.cvtColor(   # pylint: disable=no-member
             imutils.resize(
                 frame,
                 width=DEFAULT_WIDTH
             ),
-            cv2.COLOR_BGR2RGB
-        )
+            cv2.COLOR_BGR2RGB  # pylint: disable=no-member
+        )  # pylint: disable=no-member
 
         _LOGGER.debug(
             "Retrieving frame took %d ms time for %s (%s)",
@@ -113,5 +116,3 @@ class DetectionThread(Thread):
                 self.entity_stream.entity_id,
                 self.entity_stream.stream_url
             )
-
-

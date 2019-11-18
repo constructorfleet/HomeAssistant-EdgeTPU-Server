@@ -1,3 +1,6 @@
+"""Container for entity_id and stream."""
+
+# pylint: disable=too-few-public-methods
 class EntityStream:
     """Data structure for holding entity and stream information."""
 

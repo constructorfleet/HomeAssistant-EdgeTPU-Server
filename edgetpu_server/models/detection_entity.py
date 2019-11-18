@@ -1,5 +1,6 @@
-from itertools import groupby
+"""Object detection entity."""
 import logging
+from itertools import groupby
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ KEY_STATE = "state"
 KEY_ATTRIBUTES = "attributes"
 
 
+# pylint: disable=too-few-public-methods
 class DetectionEntity:
     """Data structure for holding detection an entity's state."""
 
@@ -32,6 +34,7 @@ class DetectionEntity:
         }
 
     def as_api_payload(self):
+        """Get the entity state as an API payload."""
         return {
             KEY_STATE: self.total_count,
             KEY_ATTRIBUTES: {

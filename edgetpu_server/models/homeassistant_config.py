@@ -1,3 +1,7 @@
+"""Configuration for HomeAssistant connection"""
+
+
+# pylint: disable=too-few-public-methods
 class HomeAssistantConfig:
     """Data structure for holding Home-Assistant server configuration."""
 

@@ -1,7 +1,10 @@
+"""Modified EdgeTPU classes for ease of use."""
 from edgetpu.detection.engine import DetectionEngine
+
 from edgetpu_server.models.candidate import LabeledDetectionCandidate
 
 
+# pylint: disable=too-few-public-methods
 class DetectionFilter:
     """Detection filter data."""
 

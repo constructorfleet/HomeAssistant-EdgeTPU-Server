@@ -1,7 +1,7 @@
-import json
+"""Interacting with Home-Assistant API."""
+import logging
 
 import requests
-import logging
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -12,6 +12,7 @@ HEADER_CONTENT_TYPE_KEY = "Content-Type"
 HEADER_CONTENT_TYPE_VALUE = "application/json"
 
 
+# pylint: disable=too-few-public-methods
 class HomeAssistantApi:
     """Class to interact with Home-Assistant API."""
 
@@ -24,10 +25,6 @@ class HomeAssistantApi:
             HEADER_AUTH_KEY: self._get_auth_header(),
             HEADER_CONTENT_TYPE_KEY: HEADER_CONTENT_TYPE_VALUE
         }
-        _LOGGER.warning("Payload: %s",
-                        str(detection_entity.as_api_payload()))
-        _LOGGER.warning("Payload: %s",
-                        json.dumps(detection_entity.as_api_payload()))
         response = requests.post(
             self._get_endpoint(detection_entity.entity_id),
             json=detection_entity.as_api_payload(),

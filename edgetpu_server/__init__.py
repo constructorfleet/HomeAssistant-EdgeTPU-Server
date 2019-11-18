@@ -1,3 +1,4 @@
+"""EdgeTPU Server Module."""
 import logging
 import re
 import time
@@ -13,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 PATTERN_STREAM_INPUT = "^(.+)\\|(.*)$"
 
 
-def split_stream_from_name(stream):
+def _split_stream_from_name(stream):
     match = re.match(PATTERN_STREAM_INPUT, stream)
     if match:
         return match.group(1), match.group(2)
@@ -30,9 +31,11 @@ def _read_label_file(file_path):
     return labels
 
 
+# pylint: disable=too-few-public-methods
 class EdgeTPUServer:
     """EdgeTPU Server."""
 
+    # pylint: disable=too-many-arguments
     def __init__(
             self,
             model_path,
@@ -55,7 +58,7 @@ class EdgeTPUServer:
         self.threads = []
         self.running = start_thread
         for stream in streams:
-            entity_id, stream_url = split_stream_from_name(stream)
+            entity_id, stream_url = _split_stream_from_name(stream)
             self.threads.append(DetectionThread(
                 EntityStream(entity_id, stream_url),
                 self.engine,
@@ -67,6 +70,7 @@ class EdgeTPUServer:
             self.run()
 
     def run(self):
+        """Start application loop."""
         if not self.running:
             for thread in self.threads:
                 thread.start()

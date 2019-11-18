@@ -1,3 +1,4 @@
+"""Detection candidate with applied label."""
 from edgetpu.detection.engine import DetectionCandidate
 
 

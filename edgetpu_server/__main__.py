@@ -1,3 +1,4 @@
+"""Main entry point for edgetpu-server script."""
 import argparse
 import sys
 

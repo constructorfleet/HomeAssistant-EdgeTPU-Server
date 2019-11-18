@@ -39,7 +39,7 @@ class DetectionThread(Thread):
                           str(err))
             return None
 
-        if not ret or frame is None:
+        if not ret:
             return None
 
         frame = cv2.cvtColor(   # pylint: disable=no-member

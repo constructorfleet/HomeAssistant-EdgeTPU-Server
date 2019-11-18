@@ -18,10 +18,11 @@ class FrameGrabberThread(Thread):
 
     def run(self):
         """Continuously grab the latest frame from the video stream."""
-        while True:
-            # if self.lock.locked():
-            #     _LOGGER.warning("Locked, waiting...")
-            #     time.sleep(0.01)
-            with self.lock:
+        while self._video_stream.isOpened():
+            # sync with retrieve
+            self.lock.acquire()
+            try:
                 _LOGGER.warning("Grabbing frame")
                 self._video_stream.grab()
+            finally:
+                self.lock.release()

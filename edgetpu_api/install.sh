@@ -108,26 +108,23 @@ info "Installing library dependencies..."
 apt-get install -y \
   libusb-1.0-0 \
   libc++1 \
-  python3-pip \
-  python3-pil \
-  python3-numpy \
   libc++abi1 \
   libunwind8 \
   libgcc1
 info "Done."
 
 # Device rule file.
-UDEV_RULE_PATH="/etc/udev/rules.d/99-edgetpu-accelerator.rules"
-info "Installing device rule file [${UDEV_RULE_PATH}]..."
+# UDEV_RULE_PATH="/etc/udev/rules.d/99-edgetpu-accelerator.rules"
+# info "Installing device rule file [${UDEV_RULE_PATH}]..."
 
-if [[ -f "${UDEV_RULE_PATH}" ]]; then
-  warn "File already exists. Replacing it..."
-  rm -f "${UDEV_RULE_PATH}"
-fi
+#if [[ -f "${UDEV_RULE_PATH}" ]]; then
+#  warn "File already exists. Replacing it..."
+#  rm -f "${UDEV_RULE_PATH}"
+#fi
 
-cp -p "${SCRIPT_DIR}/99-edgetpu-accelerator.rules" "${UDEV_RULE_PATH}"
-udevadm control --reload-rules && udevadm trigger
-info "Done."
+#cp -p "${SCRIPT_DIR}/99-edgetpu-accelerator.rules" "${UDEV_RULE_PATH}"
+#udevadm control --reload-rules && udevadm trigger
+#info "Done."
 
 # Runtime library.
 info "Installing Edge TPU runtime library [${LIBEDGETPU_DST}]..."

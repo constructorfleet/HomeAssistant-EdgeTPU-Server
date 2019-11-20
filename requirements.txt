@@ -3,7 +3,6 @@ certifi==2019.9.11
 chardet==3.0.4
 ConfigArgParse==0.15.1
 edgetpu==2.11.1
-fastrlock==0.4
 idna==2.8
 imutils==0.5.3
 isort==4.3.21

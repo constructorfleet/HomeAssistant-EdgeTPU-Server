@@ -84,17 +84,17 @@ outside of the recommended ambient temperature range.
 Would you like to enable the maximum operating frequency? Y/N
 EOM
 
-read USE_MAX_FREQ
-case "${USE_MAX_FREQ}" in
-  [yY])
+# read USE_MAX_FREQ
+# case "${USE_MAX_FREQ}" in
+#  [yY])
     info "Using maximum operating frequency."
     LIBEDGETPU_SRC="${SCRIPT_DIR}/libedgetpu/libedgetpu_${LIBEDGETPU_SUFFIX}.so"
-    ;;
-  *)
-    info "Using default operating frequency."
-    LIBEDGETPU_SRC="${SCRIPT_DIR}/libedgetpu/libedgetpu_${LIBEDGETPU_SUFFIX}_throttled.so"
-    ;;
-esac
+#    ;;
+#  *)
+#    info "Using default operating frequency."
+#    LIBEDGETPU_SRC="${SCRIPT_DIR}/libedgetpu/libedgetpu_${LIBEDGETPU_SUFFIX}_throttled.so"
+##    ;;
+#esac
 
 LIBEDGETPU_DST="/usr/lib/${HOST_GNU_TYPE}/libedgetpu.so.1.0"
 

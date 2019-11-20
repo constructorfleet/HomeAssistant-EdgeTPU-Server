@@ -37,18 +37,11 @@ RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_p
 #python libraries
 WORKDIR /usr/src/app
 COPY . .
-
+RUN echo $(python3 -m pip search opencv-python)
 RUN python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
-# supervisor \
-#    && python3 -m pip install picamera python-periphery \
-#    && python3 -m pip install jupyter cython jupyterlab ipywebrtc opencv-python \
-#	&& python3 -m pip install google-auth oauthlib imutils
-
-#trick platform recognizer
 #installing library
-
 RUN cd edgetpu_api && \
     chmod +x install.sh \
     && bash install.sh -y
@@ -56,10 +49,4 @@ RUN cd edgetpu_api && \
 RUN python3 setup.py bdist_wheel \
     && pip3 install dist/edgetpu_server-*.whl
 
-CMD ["python3", "-f", "/conf/$CONF_FILE"]
-
-#RUN wget -P test_data/ https://storage.googleapis.com/cloud-iot-edge-pretrained-models/canned_models/mobilenet_v2_1.0_224_quant_edgetpu.tflite \
-#    && wget -P test_data/ http://storage.googleapis.com/cloud-iot-edge-pretrained-models/canned_models/imagenet_labels.txt \
-#    && tar xvf examples_edgetpu.tar.xz \
-#    && rm examples_edgetpu.tar.xz
-
+CMD ["edgetpu_server", "-f", "/conf/$CONF_FILE"]

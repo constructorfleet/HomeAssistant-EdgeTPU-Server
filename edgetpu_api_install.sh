@@ -23,8 +23,10 @@ GREEN="\033[0;32m"
 YELLOW="\033[0;33m"
 CLEAR="\033[0m"
 
-CPU_ARCH=$(uname -m)
-OS_VERSION=$(uname -v)
+#CPU_ARCH=$(uname -m)
+#OS_VERSION=$(uname -v)
+CPU_ARCH="armv7l"
+OS_VERSION="#1200 SMP Sun April 14 20:27:48 GMT 2019"
 
 function info {
   echo -e "${GREEN}${1}${CLEAR}"
@@ -48,16 +50,16 @@ if [[ "${CPU_ARCH}" == "x86_64" ]] && [[ "${OS_VERSION}" == *"Debian"* || "${OS_
   LIBEDGETPU_SUFFIX=x86_64
   HOST_GNU_TYPE=x86_64-linux-gnu
 elif [[ "${CPU_ARCH}" == "armv7l" ]]; then
-  MODEL=$(cat /proc/device-tree/model)
-  if [[ "${MODEL}" == "Raspberry Pi 3 Model B Rev"* ]]; then
-    info "Recognized as Raspberry Pi 3 B."
-    LIBEDGETPU_SUFFIX=arm32
-    HOST_GNU_TYPE=arm-linux-gnueabihf
-  elif [[ "${MODEL}" == "Raspberry Pi 3 Model B Plus Rev"* ]]; then
+  #MODEL=$(cat /proc/device-tree/model)
+  #if [[ "${MODEL}" == "Raspberry Pi 3 Model B Rev"* ]]; then
+  #  info "Recognized as Raspberry Pi 3 B."
+  #  LIBEDGETPU_SUFFIX=arm32
+  #  HOST_GNU_TYPE=arm-linux-gnueabihf
+  #elif [[ "${MODEL}" == "Raspberry Pi 3 Model B Plus Rev"* ]]; then
     info "Recognized as Raspberry Pi 3 B+."
     LIBEDGETPU_SUFFIX=arm32
     HOST_GNU_TYPE=arm-linux-gnueabihf
-  fi
+  #fi
 elif [[ "${CPU_ARCH}" == "aarch64" ]]; then
   info "Recognized as generic ARM64 platform."
   LIBEDGETPU_SUFFIX=arm64
@@ -84,7 +86,7 @@ outside of the recommended ambient temperature range.
 Would you like to enable the maximum operating frequency? Y/N
 EOM
 
-read USE_MAX_FREQ
+USE_MAX_FREQ="y"
 case "${USE_MAX_FREQ}" in
   [yY])
     info "Using maximum operating frequency."
@@ -99,13 +101,16 @@ esac
 LIBEDGETPU_DST="/usr/lib/${HOST_GNU_TYPE}/libedgetpu.so.1.0"
 
 # Install dependent libraries.
+
+
+
 info "Installing library dependencies..."
 sudo apt-get install -y \
   libusb-1.0-0 \
+  libc++1 \
   python3-pip \
   python3-pil \
   python3-numpy \
-  libc++1 \
   libc++abi1 \
   libunwind8 \
   libgcc1

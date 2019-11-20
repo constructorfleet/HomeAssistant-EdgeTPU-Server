@@ -42,7 +42,7 @@ RUN cd edgetpu_api && \
     chmod +x install.sh \
     && bash install.sh -y
 
-RUN python3 -m pip config --global set extra-index-url https://www.piwheels.org/simple \
+RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 

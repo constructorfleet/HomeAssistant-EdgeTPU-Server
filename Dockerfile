@@ -5,9 +5,6 @@ ENV CONF_FILE=${CONF_FILE}
 
 VOLUME /conf
 
-WORKDIR /usr/src/app
-COPY . .
-
 #do installation
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends openssh-server \
@@ -32,11 +29,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
 #installing library
-RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
+RUN DEBIAN_FRONTEND=noninteractive \
+    && echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - \
     && apt-get update \
-    && apt-get install -y python3-edgetpu libedgetpu1-max
+    && apt-get install -yq python3-edgetpu libedgetpu1-max
 
+WORKDIR /usr/src/app
+COPY . .
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \

@@ -45,7 +45,7 @@ class EdgeTPUServer:
             label_path,
             labels_to_report,
             confidence,
-            streams,
+            entity_stream,
             homeassistant_config
     ):
         labels = _read_label_file(label_path)
@@ -59,32 +59,29 @@ class EdgeTPUServer:
         )
         self.threads = []
         self.running = True
-        for stream in streams:
-            entity_id, stream_url = _split_stream_from_name(stream)
-            entity_stream = EntityStream(entity_id, stream_url)
-            lock = Lock()
-            frame_grabber = FrameGrabberThread(
-                entity_stream.video_stream,
-                lock
-            )
+        lock = Lock()
+        frame_grabber = FrameGrabberThread(
+            entity_stream.video_stream,
+            lock
+        )
 
-            grabber_thread = threading.Thread(target=frame_grabber.run)
-            grabber_thread.setDaemon(True)
-            grabber_thread.start()
+        grabber_thread = threading.Thread(target=frame_grabber.run)
+        grabber_thread.setDaemon(True)
+        grabber_thread.start()
 
-            detection = DetectionThread(
-                entity_stream,
-                self.engine,
-                HomeAssistantApi(homeassistant_config),
-                lock
-            )
+        detection = DetectionThread(
+            entity_stream,
+            self.engine,
+            HomeAssistantApi(homeassistant_config),
+            lock
+        )
 
-            thread = threading.Thread(target=detection.run)
-            thread.setDaemon(True)
-            thread.start()
+        thread = threading.Thread(target=detection.run)
+        thread.setDaemon(True)
+        thread.start()
 
-            self.threads.append(grabber_thread)
-            self.threads.append(thread)
+        self.threads.append(grabber_thread)
+        self.threads.append(thread)
 
         self.run()
 

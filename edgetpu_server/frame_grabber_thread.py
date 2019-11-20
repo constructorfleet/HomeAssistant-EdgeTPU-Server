@@ -16,6 +16,5 @@ class FrameGrabberThread:
         """Continuously grab the latest frame from the video stream."""
         while self._video_stream.isOpened():
             self.lock.acquire()
-            _LOGGER.warning("Grabbing frame")
             self._video_stream.grab()
             self.lock.release()

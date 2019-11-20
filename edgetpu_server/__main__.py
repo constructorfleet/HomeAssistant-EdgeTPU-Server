@@ -25,7 +25,7 @@ def main():
                         help="Entity ID to push to Home-Assistant")
     parser.add_argument("--categories", nargs="+", required=False,
                         help="classifier types to report")
-    parser.add_argument("--haurl", required=True,
+    parser.add_argument("--ha-url", required=True,
                         help="url for updating home-assistant states")
     parser.add_argument("--token", required=True,
                         help="long lived home-assistant token for authentication")
@@ -41,7 +41,7 @@ def main():
             args.stream
         ),
         HomeAssistantConfig(
-            args.haurl,
+            args.ha_url,
             args.token
         )
     )

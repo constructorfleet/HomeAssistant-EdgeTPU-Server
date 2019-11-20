@@ -105,7 +105,7 @@ LIBEDGETPU_DST="/usr/lib/${HOST_GNU_TYPE}/libedgetpu.so.1.0"
 
 
 info "Installing library dependencies..."
-sudo apt-get install -y \
+apt-get install -y \
   libusb-1.0-0 \
   libc++1 \
   python3-pip \
@@ -122,28 +122,28 @@ info "Installing device rule file [${UDEV_RULE_PATH}]..."
 
 if [[ -f "${UDEV_RULE_PATH}" ]]; then
   warn "File already exists. Replacing it..."
-  sudo rm -f "${UDEV_RULE_PATH}"
+  rm -f "${UDEV_RULE_PATH}"
 fi
 
-sudo cp -p "${SCRIPT_DIR}/99-edgetpu-accelerator.rules" "${UDEV_RULE_PATH}"
-sudo udevadm control --reload-rules && udevadm trigger
+cp -p "${SCRIPT_DIR}/99-edgetpu-accelerator.rules" "${UDEV_RULE_PATH}"
+udevadm control --reload-rules && udevadm trigger
 info "Done."
 
 # Runtime library.
 info "Installing Edge TPU runtime library [${LIBEDGETPU_DST}]..."
 if [[ -f "${LIBEDGETPU_DST}" ]]; then
   warn "File already exists. Replacing it..."
-  sudo rm -f "${LIBEDGETPU_DST}"
+  rm -f "${LIBEDGETPU_DST}"
 fi
 
-sudo cp -p "${LIBEDGETPU_SRC}" "${LIBEDGETPU_DST}"
-sudo ldconfig
+cp -p "${LIBEDGETPU_SRC}" "${LIBEDGETPU_DST}"
+ldconfig
 info "Done."
 
 # Python API.
 WHEEL=$(ls ${SCRIPT_DIR}/edgetpu-*-py3-none-any.whl 2>/dev/null)
 if [[ $? == 0 ]]; then
   info "Installing Edge TPU Python API..."
-  sudo python3 -m pip install --no-deps "${WHEEL}"
+  python3 -m pip install --no-deps "${WHEEL}"
   info "Done."
 fi

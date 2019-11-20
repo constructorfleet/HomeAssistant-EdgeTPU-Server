@@ -6,9 +6,9 @@ Performs object detection using an Edge Tensor Processing Unit on a video stream
 
 ### Requirements
 
-* A Google EdgeTPU, either the Coral Dev Board or the USB Accelerator
-* A TensorFlow Lite compiled model file, with associated labels file
-    * Example pre-compiled model file and labels file:
+* A Google EdgeTPU, either the Coral Dev Board or the USB Accelerator  
+* A TensorFlow Lite compiled model file, with associated labels file  
+ Example pre-compiled model file and labels file:
 ```text
     https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
     https://dl.google.com/coral/canned_models/coco_labels.txt

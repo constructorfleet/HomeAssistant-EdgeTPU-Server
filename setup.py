@@ -15,6 +15,7 @@ setuptools.setup(
     description='Performs object detection using an Edge Tensor Processing Unit on a video stream'
                 ' and publishes the state to a specified Home-Assistant instance.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
     include_package_data=True,
     zip_safe=False,

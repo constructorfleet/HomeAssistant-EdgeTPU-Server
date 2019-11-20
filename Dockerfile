@@ -33,7 +33,7 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-max
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
 WORKDIR /usr/src/app
 COPY . .

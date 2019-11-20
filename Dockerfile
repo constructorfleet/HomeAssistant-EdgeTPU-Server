@@ -5,6 +5,9 @@ ENV CONF_FILE=${CONF_FILE}
 
 VOLUME /conf
 
+WORKDIR /usr/src/app
+COPY . .
+
 #do installation
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends openssh-server \
@@ -28,14 +31,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
-#loading pretrained models
-WORKDIR /usr/src/app/models
-RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
-    && wget https://dl.google.com/coral/canned_models/coco_labels.txt
-
 #python libraries
-WORKDIR /usr/src/app
-COPY . .
 
 #installing library
 RUN cd edgetpu_api && \
@@ -48,5 +44,10 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
 
 RUN python3 setup.py bdist_wheel \
     && pip3 install dist/edgetpu_server-*.whl
+
+#loading pretrained models
+WORKDIR /usr/src/app/models
+RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
+    && wget https://dl.google.com/coral/canned_models/coco_labels.txt
 
 CMD ["edgetpu_server", "-f", "/conf/$CONF_FILE"]

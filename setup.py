@@ -1,11 +1,13 @@
 import setuptools
 
+from edgetpu_server.const import __version__
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name='edgetpu_server',
-    version='1.0.0',
+    version=__version__,
     license='MIT',
     url='https://github.com/constructorfleet/HomeAssistant-EdgeTPU-Server',
     author='Teagan Glenn',
@@ -41,7 +43,6 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Home Automation',

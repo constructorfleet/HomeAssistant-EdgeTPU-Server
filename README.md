@@ -22,16 +22,17 @@ Performs object detection using an Edge Tensor Processing Unit on a video stream
 * The camera stream URLs you wish to process
     * It is recommended to use a low resolution around 500 x 500
 
-### Command
+### CLI Arguments
 
-To run:
+To run with CLI arguments:
 ```bash
 edgetpu-server \
     -m $PATH_TO_MODEL_FILE \
     -l $PATH_TO_LABEL_FILE \
     -u $HOME_ASSISTANT_BASE_URL \
     -a $LONG_LIVED_TOKEN \
-    -s [$ENTITY_ID|VIDEO_STREAM_URL ...] \
+    -e $ENTITY_ID \
+    -s $VIDEO_STREAM_URL \
     -c $CONFIDENCE \
     -t [$CATEGORY ...]
 ```
@@ -41,9 +42,8 @@ edgetpu-server \
 * `$PATH_TO_LABEL_FILE` is the path to the label (*.txt) file downloaded above
 * `$HOME_ASSISTANT_BASE_URL` is the base url of the Home-Assistant instance (e.g. http://192.168.1.100:8123)
 * `$LONG_LIVED_TOKEN` is the token generated above
-* `[$ENTITY_ID|VIDEO_STREAM_URL ...]` is a space separated list of:
-    * `ENTITY_ID` the entity_id to publish this stream's detection information to
-    * `VIDEO_STREAM_URL` the stream url to process
+* `$ENTITY_ID` the entity_id to publish this stream's detection information to
+* `$VIDEO_STREAM_URL` the stream url to process
 * `$CONFIDENCE` minimum confidence score (0-100%) to report an object detected
 * `[$CATEGORY ...]` is a space separated list of categories to report found in the labels file
 
@@ -58,8 +58,31 @@ edgetpu-server \
     -c 70 \
     -t person cat dog
 ```
+
+### Configuration File
+
+To run with configuration file:
+```bash
+edgetpu-server -f $PATH_TO_CONFIG_FILE
+```
+
+**Where**:
+* `$PATH_TO_CONFIG_FILE` is the path to an ini or yaml configuration file with the following properties set:
+
+```yaml
+models: /src/app/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
+labels: /src/app/models/coco_labels.txt
+haurl: http://10.0.11.174:8123
+token: abc123pozxc
+entity: sensor.front_door
+stream: rtsp://10.0.50.117:7447/5c44c565e4b0b1adf6614d97_2
+confidence: 10
+categories: [person, cat, dog]
+```
    
 ### Entity State
+
+The state payload sent to Home-Assistant looks like this:
 
 ```text
 state: count of objects detected
@@ -72,3 +95,9 @@ attributes:
         category: count of objects detected by category
     total_matches: count of objects detected
 ```
+
+## Future Improvements
+
+* Provide a URL endpoint to the annotated image frame
+* Allow multiple engines to process one TPU
+* Allow multple TPUs 

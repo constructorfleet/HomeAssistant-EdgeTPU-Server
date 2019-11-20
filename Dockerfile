@@ -31,12 +31,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
-#python libraries
-
 #installing library
-RUN cd edgetpu_api && \
-    chmod +x install.sh \
-    && bash install.sh -y
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - \
+    && apt-get update \
+    && apt-get install -y python3-edgetpu libedgetpu1-max
+
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \

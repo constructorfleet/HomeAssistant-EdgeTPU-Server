@@ -1,4 +1,4 @@
-FROM ubuntu:19.04
+FROM balenalib/raspberrypi3-ubuntu-python:3.7-bionic
 
 ARG CONF_FILE=server.yaml
 ENV CONF_FILE=${CONF_FILE}
@@ -28,8 +28,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
-
-COPY ./conf/pip.conf /etc/pip.conf
 
 #loading pretrained models
 WORKDIR /usr/src/app/models

@@ -35,6 +35,8 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg
+
 WORKDIR /usr/src/app
 COPY . .
 

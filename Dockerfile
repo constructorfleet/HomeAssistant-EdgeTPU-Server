@@ -1,7 +1,5 @@
 FROM balenalib/raspberrypi3-ubuntu-python:3.7-bionic
 
-RUN [ "cross-build-start" ]
-
 ARG CONF_FILE=server.yaml
 ENV CONF_FILE=${CONF_FILE}
 

@@ -1,4 +1,4 @@
-FROM balenalib/raspberrypi3-ubuntu-python:3.7-bionic
+FROM balenalib/raspberrypi3-ubuntu-python:3.7-disco
 
 ARG CONF_FILE=server.yaml
 ENV CONF_FILE=${CONF_FILE}
@@ -36,10 +36,7 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg make
-
-RUN wget -O /tmp/libc.deb "http://ftp.us.debian.org/debian/pool/main/g/glibc/libc-bin_2.28-10_armhf.deb" \
-    && dpkg -i /tmp/libc.deb
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg make libc
 
 WORKDIR /usr/src/app
 COPY . .

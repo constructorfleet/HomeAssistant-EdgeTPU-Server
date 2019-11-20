@@ -32,9 +32,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    && apt-get update \
-    && apt-get install -yq python3-edgetpu libedgetpu1-max
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-max
 
 WORKDIR /usr/src/app
 COPY . .

@@ -15,7 +15,7 @@ RUN apt-get update \
     && mkdir /var/run/sshd
 
 #install libraries for camera
-RUN apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     build-essential wget feh pkg-config libjpeg-dev \
     libfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libqtgui4 libqt4-test \
@@ -24,7 +24,8 @@ RUN apt-get install -y --no-install-recommends \
     python3-matplotlib python3-zmq zlib1g-dev
 
 #install live camera libraries
-RUN apt-get install libgstreamer1.0-0 gstreamer1.0-tools \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+    libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 

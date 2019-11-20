@@ -3,13 +3,15 @@ import logging
 
 import requests
 
-_LOGGER = logging.getLogger(__name__)
+from edgetpu_server.const import (
+    HEADER_AUTH_KEY,
+    HEADER_CONTENT_TYPE_KEY,
+    HEADER_CONTENT_TYPE_VALUE,
+    ENDPOINT_POST_STATE_TEMPLATE,
+    HEADER_AUTH_VALUE
+)
 
-ENDPOINT_POST_STATE_TEMPLATE = "{}/api/states/{}"
-HEADER_AUTH_KEY = "Authorization"
-HEADER_AUTH_VALUE = "Bearer {}"
-HEADER_CONTENT_TYPE_KEY = "Content-Type"
-HEADER_CONTENT_TYPE_VALUE = "application/json"
+_LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-few-public-methods

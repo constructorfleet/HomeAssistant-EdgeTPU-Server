@@ -1,5 +1,7 @@
 FROM balenalib/raspberrypi3-ubuntu-python:3.7-bionic
 
+RUN [ "cross-build-start" ]
+
 ARG CONF_FILE=server.yaml
 ENV CONF_FILE=${CONF_FILE}
 
@@ -38,13 +40,13 @@ RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_p
 WORKDIR /usr/src/app
 COPY . .
 
-RUN python3 -m pip install -r requirements.txt \
-    && python3 -m pip install setuptools wheel
-
 #installing library
 RUN cd edgetpu_api && \
     chmod +x install.sh \
     && bash install.sh -y
+
+RUN python3 -m pip install -r requirements.txt \
+    && python3 -m pip install setuptools wheel
 
 RUN python3 setup.py bdist_wheel \
     && pip3 install dist/edgetpu_server-*.whl

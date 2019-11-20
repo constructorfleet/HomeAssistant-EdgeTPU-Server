@@ -37,7 +37,7 @@ RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_p
 #python libraries
 WORKDIR /usr/src/app
 COPY . .
-RUN echo $(python3 -m pip search opencv-python) \
+
 RUN python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
@@ -46,15 +46,12 @@ RUN python3 -m pip install -r requirements.txt \
 #    && python3 -m pip install jupyter cython jupyterlab ipywebrtc opencv-python \
 #	&& python3 -m pip install google-auth oauthlib imutils
 
-#downloading library file
-RUN wget https://dl.google.com/coral/edgetpu_api/edgetpu_api_latest.tar.gz -O edgetpu_api.tar.gz --trust-server-names \
-    && tar xzf edgetpu_api.tar.gz \
-    && rm edgetpu_api.tar.gz
-
 #trick platform recognizer
 #installing library
-RUN chmod +x edgetpu_api_install.sh \
-    && bash edgetpu_api_install.sh -y
+
+RUN cd edgetpu_api && \
+    chmod +x install.sh \
+    && bash install.sh -y
 
 RUN python3 setup.py bdist_wheel \
     && pip3 install dist/edgetpu_server-*.whl

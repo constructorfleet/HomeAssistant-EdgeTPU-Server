@@ -40,8 +40,8 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe 
     && echo "deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse">> /etc/apt/sources.list \
     && echo "deb http://security.ubuntu.com/ubuntu bionic-security main restricted universe multiverse">> /etc/apt/sources.list
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
-    libgfortran5-dbg libc6 make
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg libc6 make
 
 WORKDIR /usr/src/app
 COPY . .

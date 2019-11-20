@@ -9,10 +9,10 @@ Performs object detection using an Edge Tensor Processing Unit on a video stream
 * A Google EdgeTPU, either the Coral Dev Board or the USB Accelerator
 * A TensorFlow Lite compiled model file, with associated labels file
     * Example pre-compiled model file and labels file:
-    ```text
+```text
     https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
     https://dl.google.com/coral/canned_models/coco_labels.txt
-    ```
+```
 * The URL to your Home-Assistant instance
 * A long-lived token for your Home-Assistant instance
     1. Log into your Home-Assistant with your user

@@ -29,9 +29,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
 #installing library
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
 RUN DEBIAN_FRONTEND=noninteractive \
-    && echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - \
     && apt-get update \
     && apt-get install -yq python3-edgetpu libedgetpu1-max
 

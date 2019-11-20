@@ -39,7 +39,7 @@ RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_p
 #python libraries
 WORKDIR /usr/src/app
 COPY . .
-RUN echo $(python3 -m pip search opencv-python) \
+
 RUN python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 

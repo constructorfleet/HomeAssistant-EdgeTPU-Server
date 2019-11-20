@@ -21,7 +21,7 @@ def main():
                         help="minimum probability to filter weak detections, percentage")
     parser.add_argument("--stream", required=True,
                         help="video stream to process")
-    parser.add_argument("--entity", requierd=True,
+    parser.add_argument("--entity", required=True,
                         help="Entity ID to push to Home-Assistant")
     parser.add_argument("--categories", nargs="+", required=False,
                         help="classifier types to report")

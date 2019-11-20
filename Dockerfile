@@ -35,6 +35,11 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
+RUN echo "deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list \
+    && echo "deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse">> /etc/apt/sources.list \
+    && echo "deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse">> /etc/apt/sources.list \
+    && echo "deb http://security.ubuntu.com/ubuntu bionic-security main restricted universe multiverse">> /etc/apt/sources.list
+
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgfortran5-dbg libc6 make
 

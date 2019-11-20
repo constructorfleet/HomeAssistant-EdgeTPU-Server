@@ -21,7 +21,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     build-essential wget feh pkg-config libjpeg-dev \
     libfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libqtgui4 libqt4-test \
-    python3-dev python3-pip python3-setuptools \
     python3-wheel python3-numpy python3-pil \
     python3-matplotlib python3-zmq zlib1g-dev
 

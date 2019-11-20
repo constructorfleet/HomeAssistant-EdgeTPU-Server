@@ -29,6 +29,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
+COPY ./conf/pip.conf /etc/pip.conf
+
 #loading pretrained models
 WORKDIR /usr/src/app/models
 RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \

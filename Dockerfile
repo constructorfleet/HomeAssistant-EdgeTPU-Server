@@ -48,7 +48,7 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
-RUN python3 -m pip install  -e .
+RUN python3 -m pip install  -e . \
     && LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl
 

@@ -42,6 +42,10 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
+RUN rm -rf /usr/lib/python3.7/site-packages/pip \
+    && python3 -m ensurepip \
+    && pip install --upgrade pip
+
 RUN python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl
 

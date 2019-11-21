@@ -5,6 +5,9 @@ ENV CONF_FILE=${CONF_FILE}
 
 VOLUME /conf
 
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
 #do installation
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends openssh-server \
@@ -25,15 +28,14 @@ RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-conf
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
+    cmake git libgtk2.0-dev libavformat-dev libavcodec-dev libswscale-dev \
+    libtbb2 libtbb-dev libpng-dev libtiff-dev libdc1394-22-dev
 
 #installing library
-RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std \
-    libavformat-dev
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
 WORKDIR /usr/src/app
 COPY . .

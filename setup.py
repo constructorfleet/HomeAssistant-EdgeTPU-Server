@@ -23,11 +23,12 @@ setuptools.setup(
     install_requires=[
         'certifi==2019.9.11',
         'chardet==3.0.4',
-        'edgetpu==2.11.1',
+        'ConfigArgParse==0.15.1',
+        'edgetpu==2.11.2',
         'idna==2.8',
         'imutils==0.5.3',
         'numpy==1.17.4',
-        'opencv-python==4.1.1.26',
+        'opencv-contrib-python-headless==4.1.1.26',
         'Pillow==6.2.1',
         'requests==2.22.0',
         'urllib3==1.25.7'
@@ -44,7 +45,6 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Home Automation',
     ],

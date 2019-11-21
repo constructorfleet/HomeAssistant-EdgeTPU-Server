@@ -15,13 +15,11 @@ RUN apt-get update \
     && mkdir /var/run/sshd
 
 #install libraries for camera
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
-    build-essential wget feh pkg-config libjpeg-dev \
-    libfreetype6-dev libxml2 libopenjp2-7 \
-    libatlas-base-dev libqtgui4 libqt4-test \
-    python3-wheel python3-numpy python3-pil \
-    python3-matplotlib python3-zmq zlib1g-dev \
-    libgfortran5-dbg make libjasper-dev
+
+RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
+    libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin libfreetype6-dev libxml2 libopenjp2-7 \
+    libatlas-base-dev libjasper-dev libqtgui4 libqt4-test \
+    python3-dev python3-pip python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
 
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
@@ -34,7 +32,8 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std \
+    libavformat-dev
 
 WORKDIR /usr/src/app
 COPY . .

@@ -42,13 +42,13 @@ RUN mkdir models \
 
 COPY . .
 
-#RUN apt-get purge python3-pip python3-setuptools
+RUN apt-get purge python3-pip python3-setuptools
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install -r requirements.txt
-#    && python3 -m pip install setuptools wheel
+    && python3 -m pip install -r requirements.txt \
+    && python3 -m pip install setuptools wheel
 
 RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
-    && wheel install dist/edgetpu_server-*.whl
+    && pip3 install dist/edgetpu_server-*.whl
 
 CMD ["edgetpu_server", "-f", "/conf/$CONF_FILE"]

@@ -19,7 +19,7 @@ RUN apt-get update \
 RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
     libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin libfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libjasper-dev libqtgui4 libqt4-test python3-pip \
-    python3-dev .warning python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
+    python3-dev python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
 
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \

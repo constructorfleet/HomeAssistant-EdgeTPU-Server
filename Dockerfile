@@ -18,7 +18,7 @@ RUN apt-get update \
 
 RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
     libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin libfreetype6-dev libxml2 libopenjp2-7 \
-    libatlas-base-dev libjasper-dev libqtgui4 libqt4-test \
+    libatlas-base-dev libjasper-dev libqtgui4 libqt4-test python3-pip \
     python3-dev .warning python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
 
 #install live camera libraries
@@ -38,9 +38,9 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . .
 
-RUN rm -rf /usr/lib/python3/dist-packages/pip*/ \
-    && apt-get install python3-pip \
-    && python3.7 -m pip install pip
+#RUN rm -rf /usr/lib/python3/dist-packages/pip*/ \
+#    && apt-get install python3-pip \
+#    && python3.7 -m pip install pip
 
 RUN python3 -m pip config set extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \

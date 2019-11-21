@@ -20,7 +20,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     libfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libqtgui4 libqt4-test \
     python3-wheel python3-numpy python3-pil \
-    python3-matplotlib python3-zmq zlib1g-dev
+    python3-matplotlib python3-zmq zlib1g-dev \
+    libgfortran5-dbg make libjasper-dev
 
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
@@ -34,9 +35,6 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
-
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg make
 
 WORKDIR /usr/src/app
 COPY . .

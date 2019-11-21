@@ -24,7 +24,7 @@ RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-conf
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
-    gstreamer1.0-plugins-base gstrea mer1.0-plugins-good \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
 #installing library

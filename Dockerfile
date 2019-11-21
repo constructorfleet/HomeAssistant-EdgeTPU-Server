@@ -35,6 +35,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     python3-edgetpu libedgetpu1-std
 
 WORKDIR /usr/src/app
+#loading pretrained models
+RUN mkdir model \
+    && wget -O models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
+    && wget -O models/coco_labels.txt https://dl.google.com/coral/canned_models/coco_labels.txt
+
 COPY . .
 
 RUN apt-get purge python3-pip python3-setuptools
@@ -43,14 +48,8 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
-RUN apt-get install -y libhdf5-dev libhdf5-serial-dev
-
-RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
+RUN python3 -m pip install  -e .
+    && LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl
-
-#loading pretrained models
-WORKDIR /usr/src/app/models
-RUN wget https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
-    && wget https://dl.google.com/coral/canned_models/coco_labels.txt
 
 CMD ["edgetpu_server", "-f", "/conf/$CONF_FILE"]

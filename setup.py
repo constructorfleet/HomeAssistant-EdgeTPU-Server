@@ -27,7 +27,7 @@ setuptools.setup(
         'idna==2.8',
         'imutils==0.5.3',
         'numpy==1.17.4',
-        'opencv-contrib-python-headless==4.1.1.26',
+        'opencv-python==4.1.1.26',
         'Pillow==6.2.1',
         'requests==2.22.0',
         'urllib3==1.25.7'

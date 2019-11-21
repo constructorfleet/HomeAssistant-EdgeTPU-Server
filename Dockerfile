@@ -42,8 +42,8 @@ RUN python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
 RUN python3 -m pip config set extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install opencv-python==4.1.1.26
-    && python3 -m pip config unset extra-index-ur
+    && python3 -m pip install opencv-python==4.1.1.26 \
+    && python3 -m pip config unset extra-index-url
 
 RUN python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl

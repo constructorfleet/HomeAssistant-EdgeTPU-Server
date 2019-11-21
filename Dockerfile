@@ -29,7 +29,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
-    cmake git libgtk-3.0-dev libgtk-3.0-dev libavformat-dev \
+    cmake git libgtk-3.0 libavformat-dev \
     libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
     libtiff-dev libdc1394-22-dev
 

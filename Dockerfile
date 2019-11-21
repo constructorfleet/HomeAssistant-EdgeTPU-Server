@@ -45,7 +45,7 @@ COPY . .
 #RUN apt-get purge python3-pip python3-setuptools
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install -r requirements.txt \
+    && python3 -m pip install -r requirements.txt
 #    && python3 -m pip install setuptools wheel
 
 RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \

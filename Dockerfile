@@ -1,4 +1,4 @@
-FROM balenalib/raspberrypi3-ubuntu-python:3.7-disco
+FROM balenalib/raspberrypi3-debian-python:3.7-buster
 
 ARG CONF_FILE=server.yaml
 ENV CONF_FILE=${CONF_FILE}

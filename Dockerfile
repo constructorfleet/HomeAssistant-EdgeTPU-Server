@@ -36,7 +36,7 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq python3-edgetpu libedgetpu1-std
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg make libc
+    && DEBIAN_FRONTEND=noninteractive apt-get install -yq libgfortran5-dbg make
 
 WORKDIR /usr/src/app
 COPY . .

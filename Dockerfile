@@ -38,11 +38,9 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . .
 
-#RUN rm -rf /usr/lib/python3/dist-packages/pip*/ \
-#    && apt-get install python3-pip \
-#    && python3.7 -m pip install pip
+RUN apt-get purge python3-pip
 
-RUN python3 -m pip config set extra-index-url https://www.piwheels.org/simple \
+RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 

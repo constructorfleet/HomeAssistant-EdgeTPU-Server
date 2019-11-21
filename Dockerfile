@@ -36,7 +36,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
 
 WORKDIR /usr/src/app
 #loading pretrained models
-RUN mkdir model \
+RUN mkdir models \
     && wget -O models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
     && wget -O models/coco_labels.txt https://dl.google.com/coral/canned_models/coco_labels.txt
 

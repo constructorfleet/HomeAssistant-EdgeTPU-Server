@@ -29,8 +29,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
-    cmake git libgtk2.0-dev libavformat-dev libavcodec-dev libswscale-dev \
-    libtbb2 libtbb-dev libpng-dev libtiff-dev libdc1394-22-dev
+    cmake git libgtk-3.0-dev libgtk-3.0-dev libavformat-dev \
+    libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
+    libtiff-dev libdc1394-22-dev
 
 #installing library
 
@@ -40,13 +41,15 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . .
 
-RUN apt-get purge python3-pip
+RUN apt-get purge python3-pip python3-setuptools
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
-RUN python3 setup.py bdist_wheel \
+RUN apt-get install -y libhdf5-dev libhdf5-serial-dev
+
+RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl
 
 #loading pretrained models

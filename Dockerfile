@@ -19,12 +19,12 @@ RUN apt-get update \
 RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
     libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin libfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libjasper-dev libqtgui4 libqt4-test \
-    python3-dev python3-pip python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
+    python3-dev .warning python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
 
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libgstreamer1.0-0 gstreamer1.0-tools \
-    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-base gstrea mer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils
 
 #installing library
@@ -38,12 +38,13 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . .
 
-RUN python3 -m pip install -r requirements.txt \
-    && python3 -m pip install setuptools wheel
+RUN rm -rf /usr/lib/python3/dist-packages/pip*/ \
+    && apt-get install python3-pip \
+    && python3.7 -m pip install pip
 
 RUN python3 -m pip config set extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install opencv-python==4.1.1.26 \
-    && python3 -m pip config unset extra-index-url
+    && python3 -m pip install -r requirements.txt \
+    && python3 -m pip install setuptools wheel
 
 RUN python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl

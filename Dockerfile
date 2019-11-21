@@ -43,7 +43,7 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
     && python3 -m pip install setuptools wheel
 
 RUN python3 setup.py bdist_wheel \
-    && pip3 install dist/edgetpu_server-*.whl
+    && python3 -m pip install dist/edgetpu_server-*.whl
 
 #loading pretrained models
 WORKDIR /usr/src/app/models

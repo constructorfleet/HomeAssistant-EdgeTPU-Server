@@ -24,7 +24,6 @@ setuptools.setup(
         'certifi==2019.9.11',
         'chardet==3.0.4',
         'ConfigArgParse==0.15.1',
-        'edgetpu==2.11.2',
         'idna==2.8',
         'imutils==0.5.3',
         'numpy==1.17.4',

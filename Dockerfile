@@ -38,13 +38,12 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 COPY . .
 
-RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install -r requirements.txt \
+RUN python3 -m pip install -r requirements.txt \
     && python3 -m pip install setuptools wheel
 
-RUN rm -rf /usr/lib/python3.7/site-packages/pip \
-    && python3 -m ensurepip \
-    && pip install --upgrade pip
+RUN python3 -m pip config set extra-index-url https://www.piwheels.org/simple \
+    && python3 -m pip install opencv-python==4.1.1.26
+    && python3 -m pip config unset extra-index-ur
 
 RUN python3 setup.py bdist_wheel \
     && python3 -m pip install dist/edgetpu_server-*.whl

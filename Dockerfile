@@ -51,4 +51,4 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
 #RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
 #    && pip3 install --install-option="--install-scripts=/usr/local/bin" dist/edgetpu_server-*.whl
 
-CMD ["LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3", "-m", "edgetpu_server", "-f", "/conf/${CONFIG_FILE}"]
+CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/${CONFIG_FILE}"]

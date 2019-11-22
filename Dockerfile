@@ -1,5 +1,8 @@
 FROM balenalib/raspberrypi3-debian-python:3.7-buster
 
+ARG CONFIG_FILE=server.yaml
+ENV CONFIG_FILE=${CONFIG_FILE}
+
 VOLUME /conf
 
 RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
@@ -49,4 +52,4 @@ ENV LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1
 #RUN LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 python3 setup.py bdist_wheel \
 #    && pip3 install --install-option="--install-scripts=/usr/local/bin" dist/edgetpu_server-*.whl
 
-CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/secret.yaml"]
+CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/${CONFIG_FILE}"]

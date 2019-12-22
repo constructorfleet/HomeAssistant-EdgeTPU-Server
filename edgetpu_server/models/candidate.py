@@ -1,4 +1,5 @@
 """Detection candidate with applied label."""
+# pylint: disable=import-errror
 from edgetpu.detection.engine import DetectionCandidate
 
 

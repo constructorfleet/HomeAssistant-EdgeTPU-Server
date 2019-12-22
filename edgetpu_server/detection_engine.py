@@ -1,4 +1,5 @@
 """Modified EdgeTPU classes for ease of use."""
+# pylint: disable=import-errror
 from edgetpu.detection.engine import DetectionEngine
 
 from edgetpu_server.models.candidate import LabeledDetectionCandidate

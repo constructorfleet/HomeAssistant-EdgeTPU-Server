@@ -59,10 +59,16 @@ class DetectionThread:
 
     def _process_frame(self, frame):
         start = datetime.now().timestamp()
-        detection_entity = DetectionEntity(
-            self.entity_stream.entity_id,
-            self.engine.filtered_detect_with_image(frame)
-        )
+        try:
+            detection_entity = DetectionEntity(
+                self.entity_stream.entity_id,
+                self.engine.filtered_detect_with_image(frame)
+            )
+        except Exception as err:
+            _LOGGER.error(
+                "Error processing frame: %s",
+                str(err)
+            )
 
         _LOGGER.debug(
             "Processing frame took %f ms time for %s (%s)",

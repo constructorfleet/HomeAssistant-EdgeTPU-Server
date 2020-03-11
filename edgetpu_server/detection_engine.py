@@ -53,7 +53,7 @@ class FilteredDetectionEngine(DetectionEngine):
     def filtered_detect_with_image(self, image):
         """Perform object detection on an image and passed through the filter criteria."""
         return self._filter.filter_candidates(
-            self.DetectWithImage(
+            self.detect_with_image(
                 image,
                 threshold=self._filter.threshold / 100,
                 keep_aspect_ratio=True,

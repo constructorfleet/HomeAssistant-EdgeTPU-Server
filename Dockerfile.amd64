@@ -1,0 +1,57 @@
+FROM debian:buster as builder
+
+VOLUME /conf
+
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/ coral-edgetpu.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+RUN cd /tmp && \
+    wget https://packages.le-vert.net/tensorflow/debian/pool-buster/libjasper/libjasper-dev_2.0.16-0%2BDebian.buster.10_amd64.deb && \
+    dpkg -i libjasper-dev_2.0.16-0+Debian.buster.10_amd64.deb || apt-get install -y -f
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    zip unzip wget bash-completion git curl \
+    build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
+    libfreetype6-dev libxml2 libopenjp2-7 \
+    libatlas-base-dev libjasper-dev libqtgui4 libqt4-test \
+    python3 python3-dev python3-setuptools python3-wheel python3-numpy \
+    python3-pil python3-matplotlib python3-zmq python3-six python3-pip \
+    gasket-dkms edgetpu
+
+#install live camera libraries
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+    libgstreamer1.0-0 gstreamer1.0-tools \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
+    cmake git libgtk-3.0 libavformat-dev \
+    libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
+    libtiff-dev libdc1394-22-dev libhdf5-dev libhdf5-serial-dev \
+    python3-edgetpu
+
+
+# Download the edgetpu library and install it
+RUN cd /tmp && git clone https://github.com/google-coral/edgetpu.git && \
+    install edgetpu/libedgetpu/throttled/k8/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so.1.0 && \
+    ln -rs /usr/local/lib/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so.1 && \
+    ln -rs /usr/local/lib/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so && \
+    mkdir -p /usr/local/include/libedgetpu && \
+    install edgetpu/libedgetpu/edgetpu.h /usr/local/include/libedgetpu/edgetpu.h && \
+    install edgetpu/libedgetpu/edgetpu_c.h /usr/local/include/libedgetpu/edgetpu_c.h && \
+    rm -Rf 
+
+WORKDIR /usr/src/app
+#loading pretrained models
+RUN mkdir models \
+    && wget -O models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite https://dl.google.com/coral/canned_models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite \
+    && wget -O models/coco_labels.txt https://dl.google.com/coral/canned_models/coco_labels.txt
+
+COPY . .
+
+RUN apt-get purge python3-pip python3-setuptools
+
+RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
+    && python3 -m pip install -r requirements.txt \
+    && python3 -m pip install setuptools wheel
+
+ENV LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1
+CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/server.yaml"]

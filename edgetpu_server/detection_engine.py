@@ -36,6 +36,7 @@ class FilteredDetectionEngine(DetectionEngine):
             self,
             detection_filter,
             model_path,
+            detection_lock,
             device_path=None):
         """
         Args:
@@ -54,14 +55,19 @@ class FilteredDetectionEngine(DetectionEngine):
         _LOGGER.info('Initializing filtered detection engine')
         DetectionEngine.__init__(self, model_path, device_path)
         self._filter = detection_filter
+        self._detection_lock = detection_lock
 
     def filtered_detect_with_image(self, image):
         """Perform object detection on an image and passed through the filter criteria."""
-        return self._filter.filter_candidates(
-            self.detect_with_image(
-                image,
-                threshold=self._filter.threshold / 100,
-                keep_aspect_ratio=True,
-                relative_coord=False
+        self._detection_lock.acquire()
+        try:
+            return self._filter.filter_candidates(
+                self.detect_with_image(
+                    image,
+                    threshold=self._filter.threshold / 100,
+                    keep_aspect_ratio=True,
+                    relative_coord=False
+                )
             )
-        )
+        finally:
+            self._detection_lock.release()

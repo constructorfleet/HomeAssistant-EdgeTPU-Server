@@ -45,43 +45,47 @@ class EdgeTPUServer:
             label_path,
             labels_to_report,
             confidence,
-            entity_stream,
+            entity_streams,
             homeassistant_config
     ):
         labels = _read_label_file(label_path)
+        detection_lock = Lock()
         self.engine = FilteredDetectionEngine(
             DetectionFilter(
                 confidence,
                 labels,
                 labels_to_report
             ),
-            model_path
+            model_path,
+            detection_lock
         )
         self.threads = []
         self.running = True
-        lock = Lock()
-        frame_grabber = FrameGrabberThread(
-            entity_stream.video_stream,
-            lock
-        )
 
-        grabber_thread = threading.Thread(target=frame_grabber.run)
-        grabber_thread.setDaemon(True)
-        grabber_thread.start()
+        for entity_stream in entity_streams:
+            video_stream_lock = Lock()
+            frame_grabber = FrameGrabberThread(
+                entity_stream.video_stream,
+                video_stream_lock
+            )
 
-        detection = DetectionThread(
-            entity_stream,
-            self.engine,
-            HomeAssistantApi(homeassistant_config),
-            lock
-        )
+            grabber_thread = threading.Thread(target=frame_grabber.run)
+            grabber_thread.setDaemon(True)
+            grabber_thread.start()
 
-        thread = threading.Thread(target=detection.run)
-        thread.setDaemon(True)
-        thread.start()
+            detection = DetectionThread(
+                entity_stream,
+                self.engine,
+                HomeAssistantApi(homeassistant_config),
+                video_stream_lock
+            )
 
-        self.threads.append(grabber_thread)
-        self.threads.append(thread)
+            thread = threading.Thread(target=detection.run)
+            thread.setDaemon(True)
+            thread.start()
+
+            self.threads.append(grabber_thread)
+            self.threads.append(thread)
 
         self.run()
 

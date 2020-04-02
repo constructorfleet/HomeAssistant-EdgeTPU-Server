@@ -1,7 +1,10 @@
 """Modified EdgeTPU classes for ease of use."""
+import logging
 from edgetpu.detection.engine import DetectionEngine  # pylint: disable=import-error
 
 from edgetpu_server.models.candidate import LabeledDetectionCandidate
+
+_LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-few-public-methods
@@ -9,6 +12,7 @@ class DetectionFilter:
     """Detection filter data."""
 
     def __init__(self, threshold, labels, labels_to_report):
+        _LOGGER.info('Initializing detection engine')
         self.threshold = threshold
         self.labels = labels
         self.labels_to_report = labels_to_report
@@ -47,6 +51,7 @@ class FilteredDetectionEngine(DetectionEngine):
         Raises:
           ValueError: If the model's output tensor size is not 4.
         """
+        _LOGGER.info('Initializing filtered detection engine')
         DetectionEngine.__init__(self, model_path, device_path)
         self._filter = detection_filter
 

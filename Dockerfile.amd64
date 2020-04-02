@@ -49,7 +49,7 @@ RUN mkdir models \
 
 COPY . .
 
-RUN apt-get purge python3-pip python3-setuptools
+RUN apt-get purge -y python3-pip python3-setuptools
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
     && python3 -m pip install -r requirements.txt \

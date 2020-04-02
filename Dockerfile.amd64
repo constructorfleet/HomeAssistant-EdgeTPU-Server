@@ -49,9 +49,9 @@ RUN mkdir models \
 
 COPY . .
 
-RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install -r requirements.txt \
-    && python3 -m pip install setuptools wheel
+RUN pip3 config set global.extra-index-url https://www.piwheels.org/simple \
+    && pip3 install -r requirements.txt \
+    && pip3 install setuptools wheel
 
-ENV LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libatomic.so.1
 CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/server.yaml"]

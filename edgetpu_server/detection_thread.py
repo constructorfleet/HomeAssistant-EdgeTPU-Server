@@ -1,12 +1,15 @@
 """Thread for processing object detection."""
+import io
 import logging
 import threading
 import time
 from datetime import datetime
+from email.mime import image
 
 import cv2
 import imutils
 from PIL import Image
+from pip._vendor.urllib3.packages.six import StringIO
 
 from edgetpu_server.image_writer_thread import ImageWriterThread
 from edgetpu_server.models.detection_entity import DetectionEntity
@@ -44,7 +47,7 @@ class DetectionThread:
 
         if not ret:
             return None
-        original_frame = frame
+
         frame = cv2.cvtColor(  # pylint: disable=no-member
             imutils.resize(
                 frame,
@@ -52,6 +55,7 @@ class DetectionThread:
             ),
             cv2.COLOR_BGR2RGB  # pylint: disable=no-member
         )  # pylint: disable=no-member
+
         _LOGGER.debug(
             "Retrieving frame took %f ms time for %s (%s)",
             (datetime.now().timestamp()) - start,
@@ -59,7 +63,10 @@ class DetectionThread:
             self.entity_stream.stream_url
         )
 
-        return Image.fromarray(frame), original_frame
+        image = StringIO()
+        frame.save(image, format='JPEG')
+
+        return Image.fromarray(frame), image.seek(0)
 
     def _process_frame(self, frame):
         start = datetime.now().timestamp()
@@ -107,7 +114,7 @@ class DetectionThread:
         _LOGGER.info('Running detection thread')
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
-            frame, original = self._retrieve_frame()
+            frame, original= self._retrieve_frame()
 
             if frame is None:
                 _LOGGER.warning(

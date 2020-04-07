@@ -15,7 +15,7 @@ REGEX_SENSOR_ID = re.compile(r'^\W+entity_id: (sensor\.[a-z_]*)$')
 def _load_stream_files(stream_files):
     entity_streams = []
     for file in stream_files:
-        line_number = 0;
+        line_number = 0
         entity_stream_name = None
         stream = None
         sensor = None

@@ -12,4 +12,3 @@ class EntityStream:
         self.entity_id = entity_id
         self.stream_url = stream_url
         self.video_stream = cv2.VideoCapture(self.stream_url)  # pylint: disable=no-member
-        self.video_stream.open()

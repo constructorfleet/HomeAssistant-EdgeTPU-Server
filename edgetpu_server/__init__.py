@@ -65,7 +65,9 @@ class EdgeTPUServer:
         self.running = True
 
         app = get_app()
-        app.run(host="0.0.0.0", port=port)
+        flask_thread = threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': port})
+        flask_thread.setDaemon(True)
+        flask_thread.start()
 
         for entity_stream in entity_streams:
             video_stream_lock = Lock()

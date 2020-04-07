@@ -139,6 +139,5 @@ class DetectionThread:
             detection_entity
         )
 
-        image_writer = Process(target=image_writer.run)
+        image_writer = Process(target=image_writer.run, daemon=True)
         image_writer.start()
-        image_writer.join()

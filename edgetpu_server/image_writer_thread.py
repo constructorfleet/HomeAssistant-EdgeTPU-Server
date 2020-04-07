@@ -3,7 +3,7 @@ import logging
 
 from PIL import ImageDraw
 
-from edgetpu_server.image_server import images, ImageResource
+from edgetpu_server.image_server import ImageResource
 
 _LOGGING = logging.getLogger(__name__)
 

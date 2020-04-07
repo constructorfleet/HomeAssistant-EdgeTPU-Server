@@ -82,15 +82,8 @@ class EdgeTPUServer:
             thread = Process(target=detection.run, daemon=True)
             thread.start()
 
-        get_app().run(host="0.0.0.0", port=port)
         self.run()
 
     def run(self):
         """Start application loop."""
-        # for t in threading.enumerate():
-        #     if t is main_thread:
-        #         continue
-        #
-        #     logging.debug('Thread %s', t.getName())
-        while True:
-            time.sleep(300)
+        get_app().run(host="0.0.0.0", port=port)

@@ -107,7 +107,7 @@ class DetectionThread:
 
     def run(self):
         """Loop through video stream frames and detect objects."""
-        _LOGGER.info('Running detection thread')
+        _LOGGER.warn('Running detection thread')
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
             frame, original = self._retrieve_frame()
@@ -131,7 +131,7 @@ class DetectionThread:
                 self.entity_stream.entity_id,
                 self.entity_stream.stream_url
             )
-        _LOGGER.info('Video stream closed')
+        _LOGGER.warn('Video stream closed')
 
     def _annotate_image(self, frame, detection_entity):
         image_writer = ImageWriterThread(

@@ -19,7 +19,7 @@ class HomeAssistantApi:
     """Class to interact with Home-Assistant API."""
 
     def __init__(self, config):
-        _LOGGER.info('Initializing HomeAssistant API')
+        _LOGGER.warn('Initializing HomeAssistant API')
         self._config = config
 
     def set_entity_state(self, detection_entity):

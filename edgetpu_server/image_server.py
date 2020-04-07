@@ -41,7 +41,7 @@ def get_app():
         return send_file(
             image_data,
             attachment_filename=image.image_name,
-            mimetype='image/jpg')
+            mimetype='image/png')
 
     return app
 

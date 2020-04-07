@@ -39,10 +39,8 @@ def get_app():
         finally:
             image.lock.release()
         return send_file(
-            image_data,
+            io.BytesIO(image_data),
             attachment_filename=image.image_name,
-            mimetype='image/png')
+            as_attachment=True)
 
     return app
-
-

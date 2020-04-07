@@ -1,8 +1,8 @@
 import io
 import logging
-import cv2
 
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
+
 from edgetpu_server.image_server import images, ImageResource
 
 _LOGGING = logging.getLogger(__name__)
@@ -54,11 +54,13 @@ class ImageWriterThread:
 
     def run(self):
         img_name = self._detection_entity.stream_name
+        _LOGGING.warning('Writing {}'.format(img_name))
         img = self._frame
         img_width, img_height = img.size
         draw = ImageDraw.Draw(img)
 
         for category, values in self._detection_entity.object_detection_map.items():
+            _LOGGING.warning('Drawing a box')
             # Draw detected objects
             for instance in values:
                 label = "{} {:.1f}%".format(category, instance["score"])
@@ -70,4 +72,5 @@ class ImageWriterThread:
             images[img_name] = ImageResource(img_name, image_bytes)
 
         images[img_name].set_image_data(image_bytes)
+        _LOGGING.warning('Writing bytes {}'.format(img_name))
 

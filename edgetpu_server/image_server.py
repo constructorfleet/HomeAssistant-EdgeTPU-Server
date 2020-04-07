@@ -1,8 +1,11 @@
 import io
+import logging
 from threading import Lock
 
 import flask
 from flask import Response, send_file
+
+_LOGGER = logging.getLogger(__name__)
 
 images = {}
 
@@ -30,6 +33,7 @@ def get_app():
 
     @app.route('/image/<string:name>', methods=['GET'])
     def get_image(name):
+        _LOGGER.warning('Images: {}'.format(str(list(images.keys()))))
         image = images.get(name, None)
         if image is None:
             return Response(status=404, response="%s is not found" % name)

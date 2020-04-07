@@ -65,8 +65,7 @@ class ImageWriterThread:
                 draw_box(
                     draw, instance["box"], img_width, img_height, label, (255, 255, 0)
                 )
-        image_bytes = io.BytesIO()
-        img.save(image_bytes, format='PNG')
+        image_bytes = io.BytesIO(img.tobytes())
         if img_name not in images:
             images[img_name] = ImageResource(img_name, image_bytes)
         else:

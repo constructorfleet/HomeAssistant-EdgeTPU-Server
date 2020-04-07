@@ -47,7 +47,8 @@ class EdgeTPUServer:
             labels_to_report,
             confidence,
             entity_streams,
-            homeassistant_config
+            homeassistant_config,
+            port
     ):
         labels = _read_label_file(label_path)
         detection_lock = Lock()
@@ -64,7 +65,7 @@ class EdgeTPUServer:
         self.running = True
 
         app = get_app()
-        app.run(host="0.0.0.0", port=8081)
+        app.run(host="0.0.0.0", port=port)
 
         for entity_stream in entity_streams:
             video_stream_lock = Lock()

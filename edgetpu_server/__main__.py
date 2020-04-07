@@ -84,6 +84,8 @@ def main():
                         help="url for updating home-assistant states")
     parser.add_argument("--token", required=True,
                         help="long lived home-assistant token for authentication")
+    parser.add_argument("--port", type=int, default=8080,
+                        help="Port to run the image server on.")
     args = parser.parse_args()
 
     try:
@@ -100,7 +102,8 @@ def main():
         HomeAssistantConfig(
             args.ha_url,
             args.token
-        )
+        ),
+        args.port
     )
 
 

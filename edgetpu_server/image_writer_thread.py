@@ -68,6 +68,6 @@ class ImageWriterThread:
         image_bytes = io.BytesIO(img.tobytes())
         if img_name not in images:
             images[img_name] = ImageResource(img_name, image_bytes)
-        else:
-            images[img_name].set_image_data(image_bytes)
+
+        images[img_name].set_image_data(image_bytes)
 

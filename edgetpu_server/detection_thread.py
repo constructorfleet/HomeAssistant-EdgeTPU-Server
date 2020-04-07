@@ -47,9 +47,7 @@ class DetectionThread:
 
         if not ret:
             return None
-
-        original_frame = Image.open(io.BytesIO(bytearray(frame))).convert("RGB")
-
+        original_frame = frame
         frame = cv2.imdecode(np.asarray(bytearray(frame)), cv2.IMREAD_UNCHANGED)
         _LOGGER.debug(
             "Retrieving frame took %f ms time for %s (%s)",

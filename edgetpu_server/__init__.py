@@ -70,10 +70,8 @@ class EdgeTPUServer:
                 entity_stream.video_stream,
                 video_stream_lock
             )
-
-            grabber_thread = Process(target=frame_grabber.run)
+            grabber_thread = Process(target=frame_grabber.run, daemon=True)
             grabber_thread.start()
-            grabber_thread.join()
 
             detection = DetectionThread(
                 entity_stream,
@@ -81,19 +79,18 @@ class EdgeTPUServer:
                 HomeAssistantApi(homeassistant_config),
                 video_stream_lock
             )
-
-            thread = Process(target=detection.run)
+            thread = Process(target=detection.run, daemon=True)
             thread.start()
-            grabber_thread.join()
 
         get_app().run(host="0.0.0.0", port=port)
         self.run()
 
     def run(self):
         """Start application loop."""
-        for t in threading.enumerate():
-            if t is main_thread:
-                continue
-            logging.debug('Thread %s', t.getName())
+        # for t in threading.enumerate():
+        #     if t is main_thread:
+        #         continue
+        #
+        #     logging.debug('Thread %s', t.getName())
         while True:
             time.sleep(300)

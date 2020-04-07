@@ -51,6 +51,7 @@ class EdgeTPUServer:
             homeassistant_config,
             port
     ):
+        self.port = port
         labels = _read_label_file(label_path)
         detection_lock = Lock()
         self.engine = FilteredDetectionEngine(
@@ -86,4 +87,4 @@ class EdgeTPUServer:
 
     def run(self):
         """Start application loop."""
-        get_app().run(host="0.0.0.0", port=port)
+        get_app().run(host="0.0.0.0", port=self.port)

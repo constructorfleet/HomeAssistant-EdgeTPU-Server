@@ -33,18 +33,19 @@ class DetectionThread:
         self.video_stream_lock = video_stream_lock
 
     def _retrieve_frame(self):
+        ret = None
+        frame = None
         start = datetime.now().timestamp()
         self.video_stream_lock.acquire()
         try:
-            ret, frame = self.video_stream.retrieve()
+            ret, frame = self.video_stream.read()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
-            return None
         finally:
             self.video_stream_lock.release()
 
-        if not ret:
+        if not ret or not frame:
             return None, None
 
         frame = cv2.cvtColor(  # pylint: disable=no-member
@@ -113,7 +114,7 @@ class DetectionThread:
             frame, original = self._retrieve_frame()
             if original is None:
                 _LOGGER.warning(
-                    "Unable to get original frame for %f:",
+                    "Unable to get original frame for %s",
                     self.video_url
                 )
             if frame is None:

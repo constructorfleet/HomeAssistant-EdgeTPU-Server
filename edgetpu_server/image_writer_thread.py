@@ -48,7 +48,8 @@ def draw_box(
 
 class ImageWriterThread:
 
-    def __init__(self, frame, detection_entity):
+    def __init__(self, set_image_data, frame, detection_entity):
+        self._set_image_data = set_image_data
         self._frame = frame
         self._detection_entity = detection_entity
 
@@ -68,9 +69,7 @@ class ImageWriterThread:
                     draw, instance["box"], img_width, img_height, label, (255, 255, 0)
                 )
         image_bytes = io.BytesIO(img.tobytes())
-        if img_name not in images:
-            images[img_name] = ImageResource(img_name, image_bytes)
 
-        images[img_name].set_image_data(image_bytes)
+        self._set_image_data(ImageResource(ImageResource(img_name, image_bytes)))
         _LOGGING.warning('Writing bytes {}'.format(img_name))
 

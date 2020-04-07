@@ -7,8 +7,6 @@ from flask import Response, send_file
 
 _LOGGER = logging.getLogger(__name__)
 
-images = {}
-
 
 class ImageResource:
     lock = None
@@ -20,22 +18,27 @@ class ImageResource:
         self.image_data = image_data or None
         self.lock = Lock()
 
-    def set_image_data(self, image_data):
-        self.lock.acquire()
-        try:
-            self.image_data = image_data
-        finally:
-            self.lock.release()
-
 
 def get_app():
     app = flask.Flask(__name__)
 
-    @app.route('/image', methods=['GET'])
-    def get_image():
-        name = (images.keys() or ['UNKNOWN'])[0]
-        _LOGGER.warning('Images: {}'.format(str(list(images.keys()))))
-        image = images.get(name, None)
+    setattr(app, 'images', {})
+
+    def _set_image_data(image_res):
+        if image_res.image_name in app.images:
+            image_res.lock.acquire()
+            try:
+                image_res.image_data = image_res.image_data
+            finally:
+                image_res.lock.release()
+        else:
+            app.images[image_res.image_name] = image_res
+
+    setattr(app, 'set_image_data', _set_image_data)
+
+    @app.route('/image/<string:name>', methods=['GET'])
+    def get_image(name):
+        image = app.images.get(name, None)
         if image is None:
             return Response(status=404, response="%s is not found" % name)
         image.lock.acquire()

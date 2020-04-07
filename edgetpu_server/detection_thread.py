@@ -24,7 +24,8 @@ CV_CAP_PROP_POS_FRAMES = 1
 class DetectionThread:
     """Image detection thread."""
 
-    def __init__(self, entity_stream, engine, hass, video_stream_lock):
+    def __init__(self, set_image_data, entity_stream, engine, hass, video_stream_lock):
+        self._set_image_data = set_image_data
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
@@ -141,6 +142,7 @@ class DetectionThread:
 
     def _annotate_image(self, frame, detection_entity):
         image_writer = ImageWriterThread(
+            self._set_image_data,
             frame,
             detection_entity
         )

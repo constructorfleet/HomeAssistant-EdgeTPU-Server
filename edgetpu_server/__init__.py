@@ -4,6 +4,9 @@ import re
 import threading
 import time
 from threading import Lock, main_thread
+from multiprocessing import Process
+
+from flaskthreads import AppContextThread
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
@@ -61,7 +64,6 @@ class EdgeTPUServer:
             model_path,
             detection_lock
         )
-        self.threads = []
         self.running = True
 
         for entity_stream in entity_streams:
@@ -71,9 +73,9 @@ class EdgeTPUServer:
                 video_stream_lock
             )
 
-            grabber_thread = threading.Thread(target=frame_grabber.run)
-            grabber_thread.setDaemon(True)
+            grabber_thread = Process(target=frame_grabber.run)
             grabber_thread.start()
+            grabber_thread.join()
 
             detection = DetectionThread(
                 entity_stream,
@@ -82,26 +84,15 @@ class EdgeTPUServer:
                 video_stream_lock
             )
 
-            thread = threading.Thread(target=detection.run)
-            thread.setDaemon(True)
+            thread = Process(target=detection.run)
             thread.start()
+            grabber_thread.join()
 
-            self.threads.append(grabber_thread)
-            self.threads.append(thread)
-
-        app = get_app()
-        flask_thread = threading.Thread(target=app.run,
-                                        kwargs={'host': "0.0.0.0", 'port': port})
-        flask_thread.setDaemon(True)
-        flask_thread.start()
-        self.threads.append(flask_thread)
+        get_app().run(host="0.0.0.0", port=port)
         self.run()
 
     def run(self):
         """Start application loop."""
-        if not self.running:
-            for thread in self.threads:
-                thread.start()
         for t in threading.enumerate():
             if t is main_thread:
                 continue

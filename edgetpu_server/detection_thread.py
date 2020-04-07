@@ -3,6 +3,7 @@ import logging
 import threading
 import time
 from datetime import datetime
+from multiprocessing.context import Process
 
 import cv2
 import imutils
@@ -138,6 +139,6 @@ class DetectionThread:
             detection_entity
         )
 
-        image_writer = threading.Thread(target=image_writer.run)
-        image_writer.setDaemon(True)
+        image_writer = Process(target=image_writer.run)
         image_writer.start()
+        image_writer.join()

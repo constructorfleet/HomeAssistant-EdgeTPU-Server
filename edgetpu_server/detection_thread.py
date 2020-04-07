@@ -1,5 +1,6 @@
 """Thread for processing object detection."""
 import logging
+import threading
 import time
 from datetime import datetime
 
@@ -7,6 +8,7 @@ import cv2
 import imutils
 from PIL import Image
 
+from edgetpu_server.image_writer_thread import ImageWriterThread
 from edgetpu_server.models.detection_entity import DetectionEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -64,6 +66,7 @@ class DetectionThread:
         start = datetime.now().timestamp()
         try:
             detection_entity = DetectionEntity(
+                self.entity_stream.name,
                 self.entity_stream.entity_id,
                 self.engine.filtered_detect_with_image(frame)
             )
@@ -118,6 +121,7 @@ class DetectionThread:
             detection_entity = self._process_frame(frame)
 
             self._set_state(detection_entity)
+            self._annotate_image(frame, detection_entity)
 
             _LOGGER.debug(
                 "Detection loop took %f ms time for %s (%s)",
@@ -126,3 +130,13 @@ class DetectionThread:
                 self.entity_stream.stream_url
             )
         _LOGGER.info('Video stream closed')
+
+    def _annotate_image(self, frame, detection_entity):
+        image_writer = ImageWriterThread(
+            frame,
+            detection_entity
+        )
+
+        image_writer = threading.Thread(target=image_writer.run)
+        image_writer.setDaemon(True)
+        image_writer.start()

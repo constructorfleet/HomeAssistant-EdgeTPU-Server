@@ -18,7 +18,8 @@ KEY_ATTRIBUTES = "attributes"
 class DetectionEntity:
     """Data structure for holding detection an entity's state."""
 
-    def __init__(self, entity_id, labeled_detection_candidates):
+    def __init__(self, stream_name, entity_id, labeled_detection_candidates):
+        self.stream_name = stream_name
         self.entity_id = entity_id
         self.total_count = len(labeled_detection_candidates)
         self.object_detection_map = {

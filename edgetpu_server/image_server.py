@@ -2,10 +2,9 @@ import io
 from threading import Lock
 
 import flask
-from flask import abort, Response, send_file
+from flask import Response, send_file
 
 images = {}
-app = flask.Flask(__name__)
 
 
 class ImageResource:
@@ -26,20 +25,24 @@ class ImageResource:
             self.lock.release()
 
 
-@app.route('/image/<string:name>', methods=['GET'])
-def get_image(name):
-    image = images.get(name, None)
-    if image is None:
-        return Response(status=404, response="%s is not found" % name)
-    image.lock.acquire()
-    try:
-        image_data = image.image_data
-    finally:
-        image.lock.release()
-    return send_file(
-        image_data,
-        attachment_filename=image.image_name,
-        mimetype='image/jpg')
+def get_app():
+    app = flask.Flask(__name__)
 
+    @app.route('/image/<string:name>', methods=['GET'])
+    def get_image(name):
+        image = images.get(name, None)
+        if image is None:
+            return Response(status=404, response="%s is not found" % name)
+        image.lock.acquire()
+        try:
+            image_data = image.image_data
+        finally:
+            image.lock.release()
+        return send_file(
+            image_data,
+            attachment_filename=image.image_name,
+            mimetype='image/jpg')
+
+    return app
 
 

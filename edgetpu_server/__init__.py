@@ -86,8 +86,15 @@ class EdgeTPUServer:
             thread.setDaemon(True)
             thread.start()
 
+            app = get_app()
+            flask_thread = threading.Thread(target=app.run,
+                                            kwargs={'host': "0.0.0.0", 'port': port})
+            flask_thread.setDaemon(True)
+            flask_thread.start()
+
             self.threads.append(grabber_thread)
             self.threads.append(thread)
+            self.threads.append(flask_thread)
 
         self.run()
 
@@ -100,9 +107,5 @@ class EdgeTPUServer:
             if t is main_thread:
                 continue
             logging.debug('Thread %s', t.getName())
-        app = get_app()
-        flask_thread = threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': 5000})
-        flask_thread.setDaemon(True)
-        flask_thread.start()
         while True:
             time.sleep(300)

@@ -62,8 +62,7 @@ class DetectionThread:
             self.entity_stream.stream_url
         )
 
-        return (Image.fromarray(frame),
-                Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
+        return Image.fromarray(frame), Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
     def _process_frame(self, frame):
         start = datetime.now().timestamp()
@@ -112,7 +111,11 @@ class DetectionThread:
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
             frame, original = self._retrieve_frame()
-
+            if original is None:
+                _LOGGER.warning(
+                    "Unable to get original frame for %f:",
+                    self.video_url
+                )
             if frame is None:
                 _LOGGER.warning(
                     "Unable to retrieve frame %s, sleeping for %f s",

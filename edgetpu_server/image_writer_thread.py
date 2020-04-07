@@ -1,5 +1,6 @@
 import io
 import logging
+import cv2
 
 from PIL import Image, ImageDraw
 from edgetpu_server.image_server import images, ImageResource
@@ -53,7 +54,7 @@ class ImageWriterThread:
 
     def run(self):
         img_name = self._detection_entity.stream_name
-        img = Image.open(io.BytesIO(bytearray(self._frame))).convert("RGB")
+        img = Image.fromarray(cv2.cvtColor(self._frame, cv2.COLOR_BGR2RGB))
         img_width, img_height = img.size
         draw = ImageDraw.Draw(img)
 

@@ -64,7 +64,7 @@ class EdgeTPUServer:
         self.running = True
 
         app = get_app()
-        app.run(host="0.0.0.0", port=80)
+        app.run(host="0.0.0.0", port=8081)
 
         for entity_stream in entity_streams:
             video_stream_lock = Lock()

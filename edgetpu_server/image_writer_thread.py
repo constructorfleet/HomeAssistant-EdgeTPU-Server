@@ -52,7 +52,7 @@ class ImageWriterThread:
         self._detection_entity = detection_entity
 
     def run(self):
-        img_name = self._detection_entity.name
+        img_name = self._detection_entity.stream_name
         img = Image.open(io.BytesIO(bytearray(self._frame))).convert("RGB")
         img_width, img_height = img.size
         draw = ImageDraw.Draw(img)

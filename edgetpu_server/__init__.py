@@ -86,16 +86,15 @@ class EdgeTPUServer:
             thread.setDaemon(True)
             thread.start()
 
-            app = get_app()
-            flask_thread = threading.Thread(target=app.run,
-                                            kwargs={'host': "0.0.0.0", 'port': port})
-            flask_thread.setDaemon(True)
-            flask_thread.start()
-
             self.threads.append(grabber_thread)
             self.threads.append(thread)
-            self.threads.append(flask_thread)
 
+        app = get_app()
+        flask_thread = threading.Thread(target=app.run,
+                                        kwargs={'host': "0.0.0.0", 'port': port})
+        flask_thread.setDaemon(True)
+        flask_thread.start()
+        self.threads.append(flask_thread)
         self.run()
 
     def run(self):

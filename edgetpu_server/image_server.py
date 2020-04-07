@@ -31,8 +31,9 @@ class ImageResource:
 def get_app():
     app = flask.Flask(__name__)
 
-    @app.route('/image/<string:name>', methods=['GET'])
-    def get_image(name):
+    @app.route('/image', methods=['GET'])
+    def get_image():
+        name = (images.keys() or ['UNKNOWN'])[0]
         _LOGGER.warning('Images: {}'.format(str(list(images.keys()))))
         image = images.get(name, None)
         if image is None:

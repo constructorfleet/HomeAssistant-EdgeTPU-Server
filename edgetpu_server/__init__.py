@@ -6,8 +6,6 @@ import time
 from threading import Lock, main_thread
 from multiprocessing import Process
 
-from flaskthreads import AppContextThread
-
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
 from edgetpu_server.frame_grabber_thread import FrameGrabberThread

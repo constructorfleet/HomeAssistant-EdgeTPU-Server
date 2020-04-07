@@ -1,11 +1,14 @@
 """Thread for processing object detection."""
+import io
 import logging
 import threading
 import time
 from datetime import datetime
+from email.mime import image
 
 import cv2
 import imutils
+import numpy as np
 from PIL import Image
 
 from edgetpu_server.image_writer_thread import ImageWriterThread
@@ -45,14 +48,9 @@ class DetectionThread:
         if not ret:
             return None
 
-        frame = cv2.cvtColor(  # pylint: disable=no-member
-            imutils.resize(
-                frame,
-                width=DEFAULT_WIDTH
-            ),
-            cv2.COLOR_BGR2RGB  # pylint: disable=no-member
-        )  # pylint: disable=no-member
+        original_frame = Image.open(io.BytesIO(bytearray(frame))).convert("RGB")
 
+        frame = cv2.imdecode(np.asarray(bytearray(frame)), cv2.IMREAD_UNCHANGED)
         _LOGGER.debug(
             "Retrieving frame took %f ms time for %s (%s)",
             (datetime.now().timestamp()) - start,
@@ -60,7 +58,7 @@ class DetectionThread:
             self.entity_stream.stream_url
         )
 
-        return Image.fromarray(frame)
+        return Image.fromarray(frame), original_frame
 
     def _process_frame(self, frame):
         start = datetime.now().timestamp()
@@ -108,7 +106,7 @@ class DetectionThread:
         _LOGGER.info('Running detection thread')
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
-            frame = self._retrieve_frame()
+            frame, original = self._retrieve_frame()
 
             if frame is None:
                 _LOGGER.warning(
@@ -121,7 +119,7 @@ class DetectionThread:
             detection_entity = self._process_frame(frame)
 
             self._set_state(detection_entity)
-            self._annotate_image(frame, detection_entity)
+            self._annotate_image(original, detection_entity)
 
             _LOGGER.debug(
                 "Detection loop took %f ms time for %s (%s)",

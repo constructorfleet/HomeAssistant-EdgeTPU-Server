@@ -64,11 +64,6 @@ class EdgeTPUServer:
         self.threads = []
         self.running = True
 
-        app = get_app()
-        flask_thread = threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': port})
-        flask_thread.setDaemon(True)
-        flask_thread.start()
-
         for entity_stream in entity_streams:
             video_stream_lock = Lock()
             frame_grabber = FrameGrabberThread(
@@ -105,5 +100,9 @@ class EdgeTPUServer:
             if t is main_thread:
                 continue
             logging.debug('Thread %s', t.getName())
+        app = get_app()
+        flask_thread = threading.Thread(target=app.run, kwargs={'host': "0.0.0.0", 'port': 5000})
+        flask_thread.setDaemon(True)
+        flask_thread.start()
         while True:
             time.sleep(300)

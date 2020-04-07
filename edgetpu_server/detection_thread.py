@@ -28,6 +28,7 @@ class DetectionThread:
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
+        self.video_url = entity_stream.stream_url
         self.video_stream = entity_stream.video_stream
         self.video_stream_lock = video_stream_lock
 
@@ -114,7 +115,8 @@ class DetectionThread:
 
             if frame is None:
                 _LOGGER.warning(
-                    "Unable to retrieve frame, sleeping for %f s",
+                    "Unable to retrieve frame %s, sleeping for %f s",
+                    self.video_url,
                     FRAME_FAILURE_SLEEP
                 )
                 time.sleep(FRAME_FAILURE_SLEEP)

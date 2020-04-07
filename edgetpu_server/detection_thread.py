@@ -1,14 +1,11 @@
 """Thread for processing object detection."""
-import io
 import logging
 import threading
 import time
 from datetime import datetime
-from email.mime import image
 
 import cv2
 import imutils
-import numpy as np
 from PIL import Image
 
 from edgetpu_server.image_writer_thread import ImageWriterThread
@@ -48,7 +45,13 @@ class DetectionThread:
         if not ret:
             return None
         original_frame = frame
-        frame = cv2.imdecode(np.asarray(bytearray(frame)), cv2.IMREAD_UNCHANGED)
+        frame = cv2.cvtColor(  # pylint: disable=no-member
+            imutils.resize(
+                frame,
+                width=DEFAULT_WIDTH
+            ),
+            cv2.COLOR_BGR2RGB  # pylint: disable=no-member
+        )  # pylint: disable=no-member
         _LOGGER.debug(
             "Retrieving frame took %f ms time for %s (%s)",
             (datetime.now().timestamp()) - start,

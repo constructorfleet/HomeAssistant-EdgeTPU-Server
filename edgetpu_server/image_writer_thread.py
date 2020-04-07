@@ -54,7 +54,7 @@ class ImageWriterThread:
 
     def run(self):
         img_name = self._detection_entity.stream_name
-        img = Image.fromarray(cv2.cvtColor(self._frame, cv2.COLOR_BGR2RGB))
+        img = self._frame
         img_width, img_height = img.size
         draw = ImageDraw.Draw(img)
 

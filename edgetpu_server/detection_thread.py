@@ -44,7 +44,7 @@ class DetectionThread:
             self.video_stream_lock.release()
 
         if not ret:
-            return None
+            return None, None
 
         frame = cv2.cvtColor(  # pylint: disable=no-member
             imutils.resize(

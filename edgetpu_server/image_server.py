@@ -34,7 +34,7 @@ def get_app():
         else:
             app.images[image_res.image_name] = image_res
 
-    setattr(app, 'set_image_data', _set_image_data)
+    setattr(app, 'set_image_data', set_image_data)
 
     @app.route('/image/<string:name>', methods=['GET'])
     def get_image(name):

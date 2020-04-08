@@ -76,6 +76,7 @@ class EdgeTPUServer:
             grabber_thread.start()
 
             detection = DetectionThread(
+                self.app.set_image_data,
                 entity_stream,
                 self.engine,
                 HomeAssistantApi(homeassistant_config),

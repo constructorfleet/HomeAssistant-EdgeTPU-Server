@@ -24,7 +24,7 @@ def get_app():
 
     setattr(app, 'images', {})
 
-    def _set_image_data(image_res):
+    def set_image_data(image_res):
         if image_res.image_name in app.images:
             image_res.lock.acquire()
             try:

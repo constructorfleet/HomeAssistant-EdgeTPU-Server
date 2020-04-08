@@ -2,23 +2,24 @@ FROM balenalib/amd64-debian-python:3.7-buster
 
 VOLUME /conf
 
-RUN apt-get update && apt-get install -yq \
-    zip unzip wget bash-completion git curl gnupg
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 
-RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+#do installation
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends openssh-server \
+#do users
+    && echo 'root:root' | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
+    && mkdir /var/run/sshd
 
-RUN cd /tmp && \
-    wget https://packages.le-vert.net/tensorflow/debian/pool-buster/libjasper/libjasper-dev_2.0.16-0%2BDebian.buster.10_amd64.deb && \
-    dpkg -i libjasper-dev_2.0.16-0+Debian.buster.10_amd64.deb || apt-get install -y -f
+#install libraries for camera
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential feh pkg-config libjpeg-dev zlib1g-dev \
+RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
     libfreetype6-dev libxml2 libopenjp2-7 \
-    libatlas-base-dev libqtgui4 libqt4-test \
-    python3 python3-dev python3-setuptools python3-wheel python3-numpy \
-    python3-pil python3-matplotlib python3-zmq python3-six python3-pip \
-    gasket-dkms
+    libatlas-base-dev libjasper-dev libqtgui4 libqt4-test python3-pip \
+    python3-dev python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
 
 #install live camera libraries
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
@@ -29,17 +30,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
     libtiff-dev libdc1394-22-dev libhdf5-dev libhdf5-serial-dev \
     python3-edgetpu libedgetpu1-std
-
-
-# Download the edgetpu library and install it
-#RUN cd /tmp && git clone https://github.com/google-coral/edgetpu.git && \
-#    install edgetpu/libedgetpu/throttled/k8/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so.1.0 && \
-#    ln -rs /usr/local/lib/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so.1 && \
-#    ln -rs /usr/local/lib/libedgetpu.so.1.0 /usr/local/lib/libedgetpu.so && \
-#    mkdir -p /usr/local/include/libedgetpu && \
-#    install edgetpu/libedgetpu/edgetpu.h /usr/local/include/libedgetpu/edgetpu.h && \
-#    install edgetpu/libedgetpu/edgetpu_c.h /usr/local/include/libedgetpu/edgetpu_c.h && \
-#    rm -Rf
 
 WORKDIR /usr/src/app
 #loading pretrained models
@@ -56,4 +46,5 @@ RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/si
     && python3 -m pip install setuptools wheel
 
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libatomic.so.1
+
 CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/server.yaml"]

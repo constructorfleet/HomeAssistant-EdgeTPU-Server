@@ -7,7 +7,7 @@ RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" |
 
 #do installation
 RUN apt-get update \
-	&& apt-get install -y --no-install-recommends openssh-server \
+	&& apt-get install -y --no-install-recommends openssh-server wget \
 #do users
     && echo 'root:root' | chpasswd \
     && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
@@ -20,7 +20,7 @@ RUN cd /tmp && \
     wget https://packages.le-vert.net/tensorflow/debian/pool-buster/libjasper/libjasper-dev_2.0.16-0%2BDebian.buster.10_amd64.deb && \
     dpkg -i libjasper-dev_2.0.16-0+Debian.buster.10_amd64.deb || apt-get install -y -f
 
-RUN apt-get install -y --no-install-recommends build-essential wget feh pkg-config libjpeg-dev zlib1g-dev \
+RUN apt-get install -y --no-install-recommends build-essential feh pkg-config libjpeg-dev zlib1g-dev \
     ibfreetype6-dev libxml2 libopenjp2-7 \
     libatlas-base-dev libqtgui4 libqt4-test python3-pip \
     python3-dev python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq

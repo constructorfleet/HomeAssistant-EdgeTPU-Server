@@ -24,8 +24,8 @@ CV_CAP_PROP_POS_FRAMES = 1
 class DetectionThread:
     """Image detection thread."""
 
-    def __init__(self, set_image_data, entity_stream, engine, hass, video_stream_lock):
-        self._set_image_data = set_image_data
+    def __init__(self, entity_stream, engine, hass, video_stream_lock):
+        # self._set_image_data = set_image_data
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
@@ -47,7 +47,7 @@ class DetectionThread:
             self.video_stream_lock.release()
 
         if not ret or not frame:
-            return None, None
+            return None
 
         frame = cv2.cvtColor(  # pylint: disable=no-member
             imutils.resize(
@@ -64,7 +64,7 @@ class DetectionThread:
             self.entity_stream.stream_url
         )
 
-        return Image.fromarray(frame), Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        return Image.fromarray(frame) #, Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
     def _process_frame(self, frame):
         start = datetime.now().timestamp()
@@ -112,12 +112,12 @@ class DetectionThread:
         _LOGGER.warn('Running detection thread')
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
-            frame, original = self._retrieve_frame()
-            if original is None:
-                _LOGGER.warning(
-                    "Unable to get original frame for %s",
-                    self.video_url
-                )
+            frame = self._retrieve_frame()
+            # if original is None:
+            #     _LOGGER.warning(
+            #         "Unable to get original frame for %s",
+            #         self.video_url
+            #     )
             if frame is None:
                 _LOGGER.warning(
                     "Unable to retrieve frame %s, sleeping for %f s",
@@ -130,7 +130,7 @@ class DetectionThread:
             detection_entity = self._process_frame(frame)
 
             self._set_state(detection_entity)
-            self._annotate_image(original, detection_entity)
+            # self._annotate_image(original, detection_entity)
 
             _LOGGER.debug(
                 "Detection loop took %f ms time for %s (%s)",
@@ -140,12 +140,12 @@ class DetectionThread:
             )
         _LOGGER.warn('Video stream closed')
 
-    def _annotate_image(self, frame, detection_entity):
-        image_writer = ImageWriterThread(
-            self._set_image_data,
-            frame,
-            detection_entity
-        )
-
-        image_writer = Process(target=image_writer.run, daemon=True)
-        image_writer.start()
+    # def _annotate_image(self, frame, detection_entity):
+    #     image_writer = ImageWriterThread(
+    #         self._set_image_data,
+    #         frame,
+    #         detection_entity
+    #     )
+    #
+    #     image_writer = Process(target=image_writer.run, daemon=True)
+    #     image_writer.start()

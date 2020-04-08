@@ -20,7 +20,7 @@ RUN cd /tmp && \
     wget https://packages.le-vert.net/tensorflow/debian/pool-buster/libjasper/libjasper-dev_2.0.16-0%2BDebian.buster.10_amd64.deb && \
     wget http://http.us.debian.org/debian/pool/main/f/freetype/libfreetype6-dev_2.9.1-3+deb10u1_amd64.deb && \
     dpkg -i libjasper-dev_2.0.16-0+Debian.buster.10_amd64.deb || apt-get install -y -f && \
-    dpkg -i libfreetype6-dev_2.9.1-3+deb10u1_amd64.deb || apget install -y -f
+    dpkg -i libfreetype6-dev_2.9.1-3+deb10u1_amd64.deb || apt-get install -y -f
 
 RUN apt-get install -y --no-install-recommends build-essential feh pkg-config libjpeg-dev zlib1g-dev \
     libxml2 libopenjp2-7 \

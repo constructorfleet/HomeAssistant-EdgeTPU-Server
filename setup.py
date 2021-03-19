@@ -28,7 +28,7 @@ setuptools.setup(
         'imutils==0.5.3',
         'numpy==1.17.4',
         'opencv-python==4.1.1.26',
-        'Pillow==6.2.2',
+        'Pillow==8.1.1',
         'requests==2.22.0',
         'urllib3==1.25.7'
     ],

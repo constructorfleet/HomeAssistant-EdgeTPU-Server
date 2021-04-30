@@ -30,7 +30,7 @@ setuptools.setup(
         'opencv-python==4.1.1.26',
         'Pillow==6.2.2',
         'requests==2.22.0',
-        'urllib3==1.25.7'
+        'urllib3==1.25.8'
     ],
     test_suite='tests',
     keywords=['home-assistant', 'coral', 'edgetpu'],

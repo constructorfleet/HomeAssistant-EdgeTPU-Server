@@ -26,7 +26,7 @@ setuptools.setup(
         'ConfigArgParse==0.15.1',
         'idna==2.8',
         'imutils==0.5.3',
-        'numpy==1.17.4',
+        'numpy==1.22.0',
         'opencv-python==4.1.1.26',
         'Pillow==6.2.2',
         'requests==2.22.0',

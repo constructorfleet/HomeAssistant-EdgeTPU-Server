@@ -31,8 +31,7 @@ edgetpu-server \
     -l $PATH_TO_LABEL_FILE \
     -u $HOME_ASSISTANT_BASE_URL \
     -a $LONG_LIVED_TOKEN \
-    -e $ENTITY_ID \
-    -s $VIDEO_STREAM_URL \
+    -s $VIDEO_STREAM_YAML \
     -c $CONFIDENCE \
     -t [$CATEGORY ...]
 ```
@@ -42,8 +41,7 @@ edgetpu-server \
 * `$PATH_TO_LABEL_FILE` is the path to the label (*.txt) file downloaded above
 * `$HOME_ASSISTANT_BASE_URL` is the base url of the Home-Assistant instance (e.g. http://192.168.1.100:8123)
 * `$LONG_LIVED_TOKEN` is the token generated above
-* `$ENTITY_ID` the entity_id to publish this stream's detection information to
-* `$VIDEO_STREAM_URL` the stream url to process
+* `$VIDEO_STREAM_YAML` the file containing stream url to process
 * `$CONFIDENCE` minimum confidence score (0-100%) to report an object detected
 * `[$CATEGORY ...]` is a space separated list of categories to report found in the labels file
 
@@ -54,9 +52,17 @@ edgetpu-server \
     -l /opt/models/coco_labels.txt \
     -u http://10.0.11.174:8123 \
     -a abc123pozxc \
-    -s sensor.front_door|rtsp://10.0.50.117:8080 sensor.back_door|rtsp://10.0.50.118:8080 \
+    -s streams.yaml \
     -c 70 \
     -t person cat dog
+```
+
+### Stream Definition YAML
+
+```yaml
+driveway:
+  stream: rtsp://127.0.0.1:8001
+  entity_id: sensor.drivway_people
 ```
 
 ### Configuration File
@@ -74,8 +80,7 @@ models: /src/app/models/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite
 labels: /src/app/models/coco_labels.txt
 haurl: http://10.0.11.174:8123
 token: abc123pozxc
-entity: sensor.front_door
-stream: rtsp://10.0.50.117:7447/5c44c565e4b0b1adf6614d97_2
+streams: streams.yaml
 confidence: 10
 categories: [person, cat, dog]
 ```

@@ -4,14 +4,14 @@ import re
 import threading
 import time
 from threading import Lock, main_thread
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
 from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.homeassistant_api import HomeAssistantApi
 from edgetpu_server.image_server import get_app
-from edgetpu_server.models.entity_stream import EntityStream
+from edgetpu_server.models.ImageProcessingEntityData import EntityStream
 from edgetpu_server.models.homeassistant_config import HomeAssistantConfig
 
 _LOGGER = logging.getLogger(__name__)

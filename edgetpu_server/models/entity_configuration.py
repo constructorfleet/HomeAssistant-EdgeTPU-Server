@@ -1,8 +1,8 @@
 from typing import List
 
 
-class ClassificationEntity(object):
-    """Entity classification definition."""
+class EntityConfiguration(object):
+    """Entity configuration definition."""
 
     def __init__(
             self,

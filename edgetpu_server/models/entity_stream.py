@@ -2,6 +2,9 @@
 
 # pylint: disable=too-few-public-methods
 import cv2
+import os
+
+os.environ['OPENCV_FFMPEG_CAPTURE_OPTIONS'] = 'rtsp_transport;udp'
 
 
 class EntityStream:
@@ -11,4 +14,7 @@ class EntityStream:
         self.name = name
         self.entity_id = entity_id
         self.stream_url = stream_url
-        self.video_stream = cv2.VideoCapture(self.stream_url)  # pylint: disable=no-member
+        self.video_stream = cv2.VideoCapture(
+            self.stream_url,
+            cv2.CAP_FFMPEG,
+        )  # pylint: disable=no-member

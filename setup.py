@@ -5,6 +5,13 @@ from edgetpu_server.const import __version__
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("requirements.txt", "r") as fh:
+    requirements = [
+        requirement
+        for requirement
+        in fh.read().split("\n")
+    ]
+
 setuptools.setup(
     name='edgetpu_server',
     version=__version__,
@@ -20,18 +27,7 @@ setuptools.setup(
     include_package_data=True,
     zip_safe=False,
     platforms='any',
-    install_requires=[
-        'certifi==2019.9.11',
-        'chardet==3.0.4',
-        'ConfigArgParse==0.15.1',
-        'idna==2.8',
-        'imutils==0.5.3',
-        'numpy==1.17.4',
-        'opencv-python==4.1.1.26',
-        'Pillow==6.2.2',
-        'requests==2.22.0',
-        'urllib3==1.25.7'
-    ],
+    install_requires=requirements,
     test_suite='tests',
     keywords=['home-assistant', 'coral', 'edgetpu'],
     entry_points={
@@ -44,7 +40,7 @@ setuptools.setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Home Automation',
     ],
 )

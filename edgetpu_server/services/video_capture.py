@@ -14,7 +14,12 @@ class CaptureError(Exception):
 class VideoCaptureService(Service):
     """Service for handling video captures."""
 
-    def __init__(self, name: str, video_stream_url: str, capture_signal: VideoCaptureSignal):
+    def __init__(
+            self,
+            name: str,
+            video_stream_url: str,
+            capture_signal: VideoCaptureSignal
+    ):
         """Initialize a new video capture service."""
         super().__init__(name)
         self.video_stream_url = video_stream_url

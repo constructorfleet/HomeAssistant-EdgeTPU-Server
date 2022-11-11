@@ -2,10 +2,16 @@
 import os
 import re
 import sys
-
+import logging
 import configargparse
 
 from edgetpu_server import EdgeTPUServer, HomeAssistantConfig, EntityStream
+
+logging.basicConfig(
+    format='%(asctime)s - [%(threadName)s] - %(name)s - %(levelname)s - %(message)s',
+    level=logging.DEBUG,
+)
+_LOGGER = logging.getLogger(__name__)
 
 REGEX_ENTITY_STREAM_NAME = re.compile(r'^([a-z0-9_]+):')
 REGEX_VIDEO_STREAM = re.compile(r'^\W+stream: (.*)$')

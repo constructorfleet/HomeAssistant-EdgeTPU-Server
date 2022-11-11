@@ -39,12 +39,16 @@ class DetectionThread:
         start = datetime.now().timestamp()
         self.video_stream_lock.acquire()
         try:
+            _LOGGER.debug(self.video_stream_lock)
+            _LOGGER.debug("Lock acquired")
             ret, frame = self.video_stream.retrieve()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
         finally:
             self.video_stream_lock.release()
+            _LOGGER.debug(self.video_stream_lock)
+            _LOGGER.debug("Lock released")
 
         if not ret or not frame:
             return None
@@ -109,7 +113,8 @@ class DetectionThread:
 
     def run(self):
         """Loop through video stream frames and detect objects."""
-        _LOGGER.warn('Running detection thread')
+        _LOGGER.info('Running detection thread')
+        _LOGGER.info(self.video_stream_lock)
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
             frame = self._retrieve_frame()
@@ -138,7 +143,7 @@ class DetectionThread:
                 self.entity_stream.entity_id,
                 self.entity_stream.stream_url
             )
-        _LOGGER.warn('Video stream closed')
+        _LOGGER.info('Video stream closed')
 
     # def _annotate_image(self, frame, detection_entity):
     #     image_writer = ImageWriterThread(

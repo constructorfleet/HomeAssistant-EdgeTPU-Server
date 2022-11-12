@@ -1,5 +1,8 @@
 """Modified EdgeTPU classes for ease of use."""
 import logging
+from typing import List
+
+from PIL import Image
 from edgetpu.detection.engine import DetectionEngine  # pylint: disable=import-error
 
 from edgetpu_server.models.candidate import LabeledDetectionCandidate
@@ -12,12 +15,15 @@ class DetectionFilter:
     """Detection filter data."""
 
     def __init__(self, threshold, labels, labels_to_report):
-        _LOGGER.warn('Initializing detection engine')
+        _LOGGER.warning('Initializing detection engine')
         self.threshold = threshold
         self.labels = labels
         self.labels_to_report = labels_to_report
 
-    def filter_candidates(self, candidates):
+    def filter_candidates(
+            self,
+            candidates: List
+    ):
         """Filter the detection engine results."""
         filtered_candidates = []
         for result in candidates:
@@ -57,7 +63,10 @@ class FilteredDetectionEngine(DetectionEngine):
         self._filter = detection_filter
         self._detection_lock = detection_lock
 
-    def filtered_detect_with_image(self, image):
+    def filtered_detect_with_image(
+            self,
+            image: Image,
+    ):
         """Perform object detection on an image and passed through the filter criteria."""
         self._detection_lock.acquire()
         try:

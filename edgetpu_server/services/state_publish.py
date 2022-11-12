@@ -1,7 +1,7 @@
 import requests
 
 from edgetpu_server import HomeAssistantConfig
-from edgetpu_server.services import Service
+from edgetpu_server.services import Service, ExceptionThrownSignal
 from edgetpu_server.services.signals.frame_processed import FrameProcessedSignal
 
 ENDPOINT_POST_STATE_TEMPLATE = "{}/api/states/{}"
@@ -19,9 +19,10 @@ class StatePublishService(Service):
             name: str,
             home_assistant_config: HomeAssistantConfig,
             processed_signal: FrameProcessedSignal,
+            exception_signal: ExceptionThrownSignal,
     ):
         """Initialize a new instance of this service."""
-        super().__init__(name)
+        super().__init__(name, exception_signal)
         self._base_url = home_assistant_config.url
         self._headers = {
             HEADER_AUTH_KEY: HEADER_AUTH_VALUE.format(home_assistant_config.token),
@@ -46,6 +47,5 @@ class StatePublishService(Service):
                 )
 
                 response.raise_for_status()
-            except Exception:
-                # TODO : He's dead Jim
-                return
+            except Exception as e:
+                self.signal_exception(e)

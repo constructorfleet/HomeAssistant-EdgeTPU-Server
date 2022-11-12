@@ -6,7 +6,7 @@ from multiprocessing.queues import Queue
 
 import imutils
 
-from edgetpu_server.services import Service
+from edgetpu_server.services import Service, ExceptionThrownSignal
 from edgetpu_server.services.signals.frame_processed import FrameProcessedSignal
 from edgetpu_server.services.video_capture import VideoCaptureSignal
 
@@ -20,9 +20,10 @@ class FrameProcessService(Service):
             scaled_width: int,
             capture_signal: VideoCaptureSignal,
             result_signal: FrameProcessedSignal,
+            exception_signal: ExceptionThrownSignal,
     ):
         """Initialize a new video capture service."""
-        super().__init__(name)
+        super().__init__(name, exception_signal)
         self._scaled_width = scaled_width
         self._capture_signal = capture_signal
         self._result_signal = result_signal
@@ -43,6 +44,5 @@ class FrameProcessService(Service):
 
                 result = {}
                 self._result_signal.send_results(result)
-            except Exception:
-                # TODO : He's dead jim
-                continue
+            except Exception as e:
+                self.signal_exception(e)

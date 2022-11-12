@@ -3,7 +3,7 @@ from queue import Empty
 
 import cv2
 
-from edgetpu_server.services import Service
+from edgetpu_server.services import Service, ExceptionThrownSignal
 from edgetpu_server.services.signals.video_capture import VideoCaptureSignal
 
 
@@ -18,10 +18,11 @@ class VideoCaptureService(Service):
             self,
             name: str,
             video_stream_url: str,
-            capture_signal: VideoCaptureSignal
+            capture_signal: VideoCaptureSignal,
+            exception_signal: ExceptionThrownSignal,
     ):
         """Initialize a new video capture service."""
-        super().__init__(name)
+        super().__init__(name, exception_signal)
         self.video_stream_url = video_stream_url
         self._signal = capture_signal
 
@@ -52,6 +53,5 @@ class VideoCaptureService(Service):
                     self.video_stream_url,
                     cv2.CAP_FFMPEG,
                 )
-            except:
-                # TODO: He's dead Jim
-                continue
+            except Exception as e:
+                self.signal_exception(e)

@@ -7,11 +7,11 @@ class ClassificationModel:
     def __init__(
             self,
             model: str,
-            labels: List[str]
+            label_ids: List[int]
     ):
         """Initialize a new instance of this configuration."""
         self._model_file = model
-        self._model_labels = labels
+        self._model_label_ids = label_ids
 
     @property
     def model_file(self) -> str:
@@ -19,9 +19,9 @@ class ClassificationModel:
         return self._model_file
 
     @property
-    def model_labels(self) -> List[str]:
+    def model_label_ids(self) -> List[int]:
         """The labels associated with the TFLite model."""
-        return self._model_labels
+        return self._model_label_ids
 
 
 class ClassificationConfiguration:

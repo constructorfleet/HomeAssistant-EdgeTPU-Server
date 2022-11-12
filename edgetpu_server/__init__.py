@@ -1,12 +1,11 @@
 """EdgeTPU Server Module."""
 import logging
 import re
-import threading
 import time
-from threading import Lock, main_thread
-from multiprocessing import Process, Queue
+from threading import Lock
+from multiprocessing import Process
 
-from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
+from edgetpu_server.classifiers.edgetpu.detection_factory import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.detection_thread import DetectionThread
 from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.homeassistant_api import HomeAssistantApi

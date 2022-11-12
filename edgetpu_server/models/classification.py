@@ -58,25 +58,20 @@ class Classification:
 
     def __init__(
             self,
-            label: ClassificationLabel,
+            label_id: int,
             coordinates: ClassificationCoordinates,
             score: int,
 
     ):
         """Initialize a new data structure."""
-        self._label = label
+        self._label_id = label_id
         self._coordinates = coordinates
         self._score = score
 
     @property
-    def label(self) -> str:
-        """Get the label for this matched classification."""
-        return self._label.label
-
-    @property
     def label_id(self) -> int:
         """Get the label id for this matched classification."""
-        return self._label.id
+        return self._label_id
 
     @property
     def bounding_box(self) -> ClassificationCoordinates:

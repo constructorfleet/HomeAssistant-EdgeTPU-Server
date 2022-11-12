@@ -1,5 +1,7 @@
 from typing import List
 
+from edgetpu_server.models.classification_model import ClassificationConfiguration
+
 
 class EntityConfiguration(object):
     """Entity configuration definition."""
@@ -10,16 +12,14 @@ class EntityConfiguration(object):
             entity_id: str,
             stream_url: str,
             min_confidence: int,
-            model: str,
-            labels: List[str]
+            classification_config: ClassificationConfiguration
     ):
         """Initialize a new classification definition."""
         self._name = name
         self._entity_id = entity_id
         self._stream_url = stream_url
         self._min_confidence = min_confidence
-        self._model = model
-        self._labels = labels
+        self._classification_config = classification_config
 
     @property
     def name(self) -> str:
@@ -42,11 +42,6 @@ class EntityConfiguration(object):
         return self._min_confidence
 
     @property
-    def model(self) -> str:
-        """Filename of the detection model for classification."""
-        return self._model
-
-    @property
-    def labels(self) -> List[str]:
-        """List of labels to classify."""
-        return self._labels
+    def classification_config(self) -> ClassificationConfiguration:
+        """The classification configuration for this entity."""
+        return self._classification_config

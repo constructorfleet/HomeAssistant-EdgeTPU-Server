@@ -3,7 +3,7 @@ from typing import Tuple, List
 from edgetpu_server.utils import flatten
 
 
-class MatchCoordinates:
+class ClassificationCoordinates:
     """Cartesian coordinates for a match."""
 
     def __init__(
@@ -30,7 +30,7 @@ class MatchCoordinates:
         return flatten(self._coordinates)
 
 
-class MatchLabel:
+class ClassificationLabel:
     """Label metadata."""
 
     def __init__(
@@ -43,23 +43,23 @@ class MatchLabel:
         self._index = index
 
     @property
-    def label(self):
+    def label(self) -> str:
         """The label."""
         return self._label
 
     @property
-    def id(self):
+    def id(self) -> int:
         """The label identifier."""
         return self._index
 
 
-class MatchedClassification:
+class Classification:
     """Labeled match with bounding box."""
 
     def __init__(
             self,
-            label: MatchLabel,
-            coordinates: MatchCoordinates,
+            label: ClassificationLabel,
+            coordinates: ClassificationCoordinates,
             score: int,
 
     ):
@@ -69,16 +69,21 @@ class MatchedClassification:
         self._score = score
 
     @property
-    def label(self):
+    def label(self) -> str:
         """Get the label for this matched classification."""
-        return self._label
+        return self._label.label
 
     @property
-    def bounding_box(self):
+    def label_id(self) -> int:
+        """Get the label id for this matched classification."""
+        return self._label.id
+
+    @property
+    def bounding_box(self) -> ClassificationCoordinates:
         """Get the coordinates of the matched classification."""
         return self._coordinates
 
     @property
-    def confidence(self):
+    def confidence(self) -> int:
         """Get the confidence of the match."""
         return self._score

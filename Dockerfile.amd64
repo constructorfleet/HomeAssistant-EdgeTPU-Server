@@ -32,11 +32,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
     cmake git libgtk-3.0 libavformat-dev \
-    libavdevice-dev libv4l-dev iblapack-dev \
+    libavdevice-dev libv4l-dev liblapack-dev \
     libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
     libtiff-dev libdc1394-22-dev libhdf5-dev libhdf5-serial-dev \
     python3-edgetpu libedgetpu1-legacy-std \
-    x265 libx265-dev libnuma-dev libx264-dev libvpx-dev libfdk-aac-dev \
+    x265 libx265-dev libnuma-dev libx264-dev libvpx-dev \
     x264 libmp3lame-dev libopus-dev
 
 WORKDIR /usr/src/app

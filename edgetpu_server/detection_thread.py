@@ -37,6 +37,7 @@ class DetectionThread:
         ret = None
         frame = None
         start = datetime.now().timestamp()
+        _LOGGER.error("Stream lock acquired")
         self.video_stream_lock.acquire()
         try:
             ret, frame = self.video_stream.retrieve()
@@ -44,9 +45,12 @@ class DetectionThread:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
         finally:
+            _LOGGER.error("Lock released")
             self.video_stream_lock.release()
 
         if not ret or not frame:
+            _LOGGER.error(ret)
+            _LOGGER.error(frame)
             return None
 
         frame = cv2.cvtColor(  # pylint: disable=no-member
@@ -56,7 +60,7 @@ class DetectionThread:
             ),
             cv2.COLOR_BGR2RGB  # pylint: disable=no-member
         )  # pylint: disable=no-member
-
+        _LOGGER.error("Resized")
         _LOGGER.debug(
             "Retrieving frame took %f ms time for %s (%s)",
             (datetime.now().timestamp()) - start,

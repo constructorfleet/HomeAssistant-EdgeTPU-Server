@@ -52,6 +52,7 @@ class EdgeTPUServer:
             homeassistant_config,
             port
     ):
+        _LOGGER.error(entity_streams)
         # self.app = get_app()
         # self.port = port
         labels = _read_label_file(label_path)
@@ -68,6 +69,7 @@ class EdgeTPUServer:
         self.running = True
 
         for entity_stream in entity_streams:
+            _LOGGER.error("Creating frame grabber read")
             video_stream_lock = Lock()
             frame_grabber = FrameGrabberThread(
                 entity_stream.video_stream,

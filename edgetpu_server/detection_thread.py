@@ -1,9 +1,7 @@
 """Thread for processing object detection."""
 import logging
-import threading
 import time
 from datetime import datetime
-from multiprocessing.context import Process
 
 import cv2
 import imutils
@@ -37,11 +35,11 @@ class DetectionThread:
         ret = None
         frame = None
         start = datetime.now().timestamp()
+        _LOGGER.debug("Acquiring lock")
         self.video_stream_lock.acquire()
-        _LOGGER.error("Stream lock acquired")
         try:
+            _LOGGER.debug("Retrieving Frame")
             ret, frame = self.video_stream.retrieve()
-            _LOGGER.error("Retrieved")
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
@@ -49,7 +47,7 @@ class DetectionThread:
             _LOGGER.error("Lock released")
             self.video_stream_lock.release()
 
-        if not ret or not frame:
+        if not ret:
             _LOGGER.error(ret)
             _LOGGER.error(frame)
             return None

@@ -17,8 +17,10 @@ class FrameGrabberThread:
         """Continuously grab the latest frame from the video stream."""
         _LOGGER.warn('Running FrameGrabber thread')
         while self._video_stream.isOpened():
+            _LOGGER.debug("Acquiring lock")
             self._video_stream_lock.acquire()
             try:
+                _LOGGER.debug("Grabbing Frame")
                 self._video_stream.grab()
             except:
                 _LOGGER.warn("Error grabbing frame")

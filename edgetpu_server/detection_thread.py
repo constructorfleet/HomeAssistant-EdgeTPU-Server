@@ -115,6 +115,8 @@ class DetectionThread:
     def run(self):
         """Loop through video stream frames and detect objects."""
         _LOGGER.warn('Running detection thread')
+        if self.video_stream.isOpened():
+            self.video_stream.grab()
         while self.video_stream.isOpened():
             start = datetime.now().timestamp()
             frame = self._retrieve_frame()

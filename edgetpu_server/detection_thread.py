@@ -22,33 +22,32 @@ CV_CAP_PROP_POS_FRAMES = 1
 class DetectionThread:
     """Image detection thread."""
 
-    def __init__(self, entity_stream, engine, hass, video_stream_lock):
+    def __init__(self, entity_stream, engine, hass, cap):
         # self._set_image_data = set_image_data
         self.entity_stream = entity_stream
         self.engine = engine
         self.hass = hass
         self.video_url = entity_stream.stream_url
         self.video_stream = entity_stream.video_stream
-        self.video_stream_lock = video_stream_lock
+        self.cap = cap
 
     def _retrieve_frame(self):
         ret = None
         frame = None
         start = datetime.now().timestamp()
         _LOGGER.debug("Acquiring lock")
-        self.video_stream_lock.acquire()
+        # self.video_stream_lock.acquire()
         try:
             _LOGGER.debug("Retrieving Frame")
-            ret, frame = self.video_stream.retrieve()
+            frame = self.cap.retrieve()
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))
         finally:
             _LOGGER.error("Lock released")
-            self.video_stream_lock.release()
+            # self.video_stream_lock.release()
 
-        if not ret:
-            _LOGGER.error(ret)
+        if frame is None:
             _LOGGER.error(frame)
             return None
 

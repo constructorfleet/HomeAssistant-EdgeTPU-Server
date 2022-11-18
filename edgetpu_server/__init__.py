@@ -3,7 +3,8 @@ import logging
 import re
 import threading
 import time
-from threading import Lock, main_thread
+import queue
+from threading import Lock
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.classification_engine import ClassificationFilter, FilteredClassificationEngine
@@ -34,6 +35,32 @@ def _read_label_file(file_path):
             pair = line.strip().split(maxsplit=1)
             labels[int(pair[0])] = pair[1].strip()
     return labels
+
+
+class VideoCapture:
+
+  def __init__(self, name):
+    self.cap = cv2.VideoCapture(name)
+    self.q = queue.Queue()
+    t = threading.Thread(target=self._reader)
+    t.daemon = True
+    t.start()
+
+  # read frames as soon as they are available, keeping only most recent one
+  def _reader(self):
+    while True:
+      ret, frame = self.cap.read()
+      if not ret:
+        break
+      if not self.q.empty():
+        try:
+          self.q.get_nowait()   # discard previous (unprocessed) frame
+        except queue.Empty:
+          pass
+      self.q.put(frame)
+
+  def retrieve(self):
+    return self.q.get()
 
 
 # pylint: disable=too-few-public-methods
@@ -69,22 +96,23 @@ class EdgeTPUServer:
 
         for entity_stream in entity_streams:
             _LOGGER.error("Creating frame grabber read")
-            video_stream_lock = Lock()
-            frame_grabber = FrameGrabberThread(
-                entity_stream.video_stream,
-                video_stream_lock
-            )
-            grabber_thread = threading.Thread(target=frame_grabber.run, daemon=True)
-            grabber_thread.start()
+            # video_stream_lock = queue.Queue()
+            # frame_grabber = FrameGrabberThread(
+            #     entity_stream.video_stream,
+            #     video_stream_lock
+            # )
+            # grabber_thread = threading.Thread(target=frame_grabber.run)
+            # grabber_thread.start()
+            cap = VideoCapture(entity_stream.video_stream)
 
             detection = DetectionThread(
                 # self.app.set_image_data,
                 entity_stream,
                 self.engine,
                 HomeAssistantApi(homeassistant_config),
-                video_stream_lock
+                cap
             )
-            thread = threading.Thread(target=detection.run, daemon=True)
+            thread = threading.Thread(target=detection.run)
             thread.start()
 
         self.run()

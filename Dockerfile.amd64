@@ -35,7 +35,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     cmake git libgtk-3.0 libavformat-dev \
     libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
     libtiff-dev libdc1394-22-dev libhdf5-dev libhdf5-serial-dev \
-    python3-edgetpu libedgetpu1-std
+    python3-edgetpu libedgetpu1-legacy-std
 
 WORKDIR /usr/src/app
 #loading pretrained models
@@ -48,8 +48,8 @@ COPY . .
 RUN apt-get purge python3-pip python3-setuptools
 
 RUN python3 -m pip config set global.extra-index-url https://www.piwheels.org/simple \
-    && python3 -m pip install -r requirements.txt \
-    && python3 -m pip install setuptools wheel
+    && python3 -m pip install setuptools wheel \
+    && python3 -m pip install -r requirements.txt
 
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libatomic.so.1
 CMD ["python3", "-m", "edgetpu_server", "-f", "/conf/server.yaml"]

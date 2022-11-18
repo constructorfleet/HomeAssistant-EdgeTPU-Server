@@ -40,8 +40,8 @@ def _read_label_file(file_path):
 
 class VideoCapture:
 
-  def __init__(self, name):
-    self.cap = cv2.VideoCapture(name)
+  def __init__(self, entity_stream):
+    self.cap = entity_stream
     self.q = queue.Queue()
     t = threading.Thread(target=self._reader)
     t.daemon = True

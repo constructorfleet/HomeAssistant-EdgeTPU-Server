@@ -22,20 +22,22 @@ RUN cd /tmp && \
     dpkg -i libjasper-dev_2.0.16-0+Debian.buster.10_amd64.deb || apt-get install -y -f && \
     dpkg -i libfreetype6-dev_2.9.1-3+deb10u1_amd64.deb || apt-get install -y -f
 
-RUN apt-get install -y --no-install-recommends build-essential feh pkg-config libjpeg-dev zlib1g-dev \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+    build-essential feh pkg-config libjpeg-dev zlib1g-dev \
     libxml2 libopenjp2-7 \
     libatlas-base-dev libqtgui4 libqt4-test python3-pip \
-    python3-dev python3-setuptools python3-wheel python3-numpy python3-pil python3-matplotlib python3-zmq
-
-#install live camera libraries
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq \
+    python3-dev python3-setuptools python3-wheel python3-numpy \
+    python3-pil python3-matplotlib python3-zmq \
     libgstreamer1.0-0 gstreamer1.0-tools \
     gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
     gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly v4l-utils \
     cmake git libgtk-3.0 libavformat-dev \
+    libavdevice-dev libv4l-dev iblapack-dev
     libavcodec-dev libswscale-dev libtbb2 libtbb-dev libpng-dev \
     libtiff-dev libdc1394-22-dev libhdf5-dev libhdf5-serial-dev \
-    python3-edgetpu libedgetpu1-legacy-std
+    python3-edgetpu libedgetpu1-legacy-std \
+    x265 libx265-dev libnuma-dev libx264-dev libvpx-dev libfdk-aac-dev \
+    x264 libmp3lame-dev libopus-dev
 
 WORKDIR /usr/src/app
 #loading pretrained models

@@ -37,10 +37,11 @@ class DetectionThread:
         ret = None
         frame = None
         start = datetime.now().timestamp()
-        _LOGGER.error("Stream lock acquired")
         self.video_stream_lock.acquire()
+        _LOGGER.error("Stream lock acquired")
         try:
             ret, frame = self.video_stream.retrieve()
+            _LOGGER.error("Retrieved")
         except Exception as err:
             _LOGGER.error("Error retrieving video frame: %s",
                           str(err))

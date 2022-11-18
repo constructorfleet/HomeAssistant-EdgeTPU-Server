@@ -50,6 +50,7 @@ class VideoCapture:
   # read frames as soon as they are available, keeping only most recent one
   def _reader(self):
     while True:
+      _LOGGER.debug("Grabbing frame")
       ret, frame = self.cap.read()
       if not ret:
         break

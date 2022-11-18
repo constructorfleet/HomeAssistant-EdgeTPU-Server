@@ -14,6 +14,7 @@ from edgetpu_server.homeassistant_api import HomeAssistantApi
 from edgetpu_server.image_server import get_app
 from edgetpu_server.models.entity_stream import EntityStream
 from edgetpu_server.models.homeassistant_config import HomeAssistantConfig
+import cv2
 logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
 

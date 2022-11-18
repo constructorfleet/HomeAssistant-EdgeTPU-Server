@@ -7,6 +7,7 @@ from threading import Lock, main_thread
 from multiprocessing import Process
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
+from edgetpu_server.classification_engine import ClassificationFilter, FilteredClassificationEngine
 from edgetpu_server.detection_thread import DetectionThread
 from edgetpu_server.frame_grabber_thread import FrameGrabberThread
 from edgetpu_server.homeassistant_api import HomeAssistantApi
@@ -55,8 +56,8 @@ class EdgeTPUServer:
         # self.port = port
         labels = _read_label_file(label_path)
         detection_lock = Lock()
-        self.engine = FilteredDetectionEngine(
-            DetectionFilter(
+        self.engine = FilteredClassificationEngine(
+            ClassificationFilter(
                 confidence,
                 labels,
                 labels_to_report

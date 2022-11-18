@@ -11,4 +11,4 @@ class EntityStream:
         self.name = name
         self.entity_id = entity_id
         self.stream_url = stream_url
-        self.video_stream = cv2.VideoCapture(self.stream_url)  # pylint: disable=no-member
+        self.video_stream = cv2.VideoCapture(self.stream_url, cv2.CAP_FFMPEG)  # pylint: disable=no-member

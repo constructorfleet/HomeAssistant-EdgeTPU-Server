@@ -4,7 +4,6 @@ import re
 import threading
 import time
 from threading import Lock, main_thread
-from multiprocessing import Process
 
 from edgetpu_server.detection_engine import DetectionFilter, FilteredDetectionEngine
 from edgetpu_server.classification_engine import ClassificationFilter, FilteredClassificationEngine
@@ -14,7 +13,7 @@ from edgetpu_server.homeassistant_api import HomeAssistantApi
 from edgetpu_server.image_server import get_app
 from edgetpu_server.models.entity_stream import EntityStream
 from edgetpu_server.models.homeassistant_config import HomeAssistantConfig
-
+logging.basicConfig(level=logging.DEBUG)
 _LOGGER = logging.getLogger(__name__)
 
 PATTERN_STREAM_INPUT = "^(.+)\\|(.*)$"
@@ -75,7 +74,7 @@ class EdgeTPUServer:
                 entity_stream.video_stream,
                 video_stream_lock
             )
-            grabber_thread = Process(target=frame_grabber.run, daemon=True)
+            grabber_thread = threading.Thread(target=frame_grabber.run, daemon=True)
             grabber_thread.start()
 
             detection = DetectionThread(
@@ -85,7 +84,7 @@ class EdgeTPUServer:
                 HomeAssistantApi(homeassistant_config),
                 video_stream_lock
             )
-            thread = Process(target=detection.run, daemon=True)
+            thread = threading.Thread(target=detection.run, daemon=True)
             thread.start()
 
         self.run()

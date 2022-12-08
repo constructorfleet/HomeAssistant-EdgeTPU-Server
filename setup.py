@@ -21,7 +21,7 @@ setuptools.setup(
     zip_safe=False,
     platforms='any',
     install_requires=[
-        'certifi==2019.9.11',
+        'certifi==2022.12.7',
         'chardet==3.0.4',
         'ConfigArgParse==0.15.1',
         'idna==2.8',
